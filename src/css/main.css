@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.widget__container {
+  border: dotted orange;
+  padding: 2px;
+  margin: 2px;
+  padding-top: 20px;
+}
+
+.hits-example {
+  &__default {
+    flex-shrink: 50;
+    flex-grow: 0;
+  }
+
+  &__template {
+    flex-shrink: 2;
+    flex-grow: 2;
+    flex-basis: 50%;
+  }
+}
+
+#hits-custom__container {
+  .ais-Hits-list {
+    flex-direction: row;
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+
+
+}
+
+.ais-Hits-item {
+  flex-basis: 460px;
+  flex-grow: 50;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ais-Hits-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#hits-default__container {
+  .ais-Hits-item {
+    font-size: .75em;
+    display: block;
+    flex-direction: column;
+    flex-basis: 250px;
+    margin: 0 8px 8px 0;
+  }
+}
+
+.tag {
+  position: absolute;
+  background-color: gray;
+  padding: 2px 8px;
+  font-size: .7em;
+  color: lightyellow;
+  transform: translate(2px, -18px);
+  border-radius: 4px;
+  display: none;
+}
+
+.ais-Pagination {
+  display: inline-block;
+}
+
+article {
+  padding: 10px;
+
+  p {
+    padding: 20px 0 10px;
+    font-size: .8em;
+  }
+
+  img {
+    margin-top: 15px;
+  }
+}
