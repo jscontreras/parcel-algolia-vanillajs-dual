@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "parcel ./src/index.html --port 3001"
+    "start": "parcel ./src/index.html --port 3001",
+    "build": "parcel build --no-content-hash --no-scope-hoist --no-optimize ./src/index.html"
   },
   "devDependencies": {
     "parcel": "^2.7.0",

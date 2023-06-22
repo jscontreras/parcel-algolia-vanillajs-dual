@@ -1,11 +1,26 @@
 const { instantsearch } = window;
-import { searchClient, insightsMiddleware, searchConfig } from "./algoliaConfig";
+import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig";
+import { getQueryParam, QUERY_UPDATE_EVT } from './common';
+const { connectSearchBox } = instantsearch.connectors;
 
+
+// Read the query attribute if any
+const initialQuery = getQueryParam();
+const initialUiState = {};
+// Update InitialUIState if there is a query in the url
+if (initialQuery !== "") {
+  initialUiState[searchConfig.recordsIndex] = {
+    query: initialQuery,
+  };
+} else {
+  initialUiState[searchConfig.recordsIndex] = {}
+}
 
 // Create instantSearch instance using instant_search index and client
 const myInstantSearch = instantsearch({
   indexName: searchConfig.recordsIndex,
   searchClient,
+  initialUiState
 });
 
 /**
@@ -17,15 +32,31 @@ const myInstantSearchGlobalConfig = instantsearch.widgets.configure({
   hitsPerPage: 10,
 });
 
-// Defining searchbox Widget
-const mySearchBox = instantsearch.widgets.searchBox({
+// Add custom SearchBox render that listens to Autocomplete but doesn't render anything
+const renderSearchBox = ({ refine, instantSearchInstance }, isFirstRender) => {
+  // Rendering logic for listening from Autocomplete events.
+  if (isFirstRender) {
+    pubsub.subscribe(QUERY_UPDATE_EVT, (data, _msg) => {
+      if (data.index === instantSearchInstance.indexName) {
+        refine(data.query);
+      }
+    });
+  }
+}
+
+// Connect custom searchbox render with connectSearchBox
+const customSearchBox = connectSearchBox(
+  renderSearchBox
+);
+
+// Instanciate your custom searchBox widget
+const customSearchBoxWidget = customSearchBox({
   container: '#searchbox__container',
-  placeholder: 'Search for products',
 });
 
+// Template for rendering results
 const myHitsCustomTemplate = instantsearch.widgets.hits({
   container: '#hits-default__container',
-  cssClasses: { item: 'italic' },
   templates: {
     item(hit, { html, components, sendEvent }) {
       return html`<article class="pb-8">
@@ -57,7 +88,7 @@ const myPaginator = instantsearch.widgets.pagination({
 // Array for InstantSearch widgets
 const widgets = [
   myInstantSearchGlobalConfig,
-  mySearchBox,
+  customSearchBoxWidget,
   myHitsCustomTemplate,
   myPaginator
 ]

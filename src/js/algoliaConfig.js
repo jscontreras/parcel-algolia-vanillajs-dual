@@ -18,22 +18,17 @@ aa('setUserToken', 'ma-user-999');
 export const insightsClient = aa;
 
 // create and export middleware
-export const insightsMiddleware = instantsearch.middlewares.createInsightsMiddleware({insightsClient: aa});
+export const insightsMiddleware = window.instantsearch ? instantsearch.middlewares.createInsightsMiddleware({insightsClient: aa}): {};
 
+// Configure your indices here
 export const searchConfig = {
   catalogId: "products",
   catalogLabel: "All Products",
   recordsIndex: "instant_search",
   noResultsIndex: "instant_search",
-  suggestionsIndex: "instant_search_query_suggestions",
+  suggestionsIndex: "instant_search_demo_query_suggestions",
   searchPagePath: "/search.html",
 };
 
-/**
- * Gets query paramters from URL
- * @returns Returns query from the url
- */
-export function getQueryParam(param = 'q') {
-  return new URL(window.location).searchParams.get(param);
-}
-
+// Export channel subscription
+export const pubsub = new PubSub();

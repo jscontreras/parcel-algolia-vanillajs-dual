@@ -6,8 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Algolia Default Styles -->
+  <!-- Algolia Autocomplete default Styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic" />
+  <!-- Algolia InstantSearch default Styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/satellite-min.css">
+  <!-- Your styles -->
   <link rel="stylesheet" href="./css/main.css">
   <title>InstantSearch + Autocomplete</title>
 </head>
@@ -26,15 +29,16 @@
       </div>
     </nav>
     <h1 class="pb-3 font-bold">InstantSearch + Autocomplete</h1>
-    <!-- Some Divs with IDs HERE!! -->
+    <!-- Autocomplte container ID-->
+    <div id="autocomplete__container" class="pb-2"></div>
+    <!-- InstantSearch containers!! -->
     <div id="searchbox__container" class="pb-2"></div>
     <div id="hits-default__container"></div>
     <div id="pagination" class="p-8 text-center"></div>
   </div>
-  </div>
-  </div>
-  </div>
-  <!-- Algolia Scripts -->
+
+  <!-- Algolia Scripts and other dependencies-->
+  <script src="https://unpkg.com/PubSub"></script>
   <script>
     var ALGOLIA_INSIGHTS_SRC = "https://cdn.jsdelivr.net/npm/search-insights@2.6.0";
 
@@ -45,7 +49,15 @@
         i.async = 1, i.src = n, c.parentNode.insertBefore(i, c)
     }(window, document, "script", ALGOLIA_INSIGHTS_SRC, "aa");
   </script>
-
+  <!-- Autocomplete Libraries (autocomplete-js, plugins) -->
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-recent-searches"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-algolia-insights"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-query-suggestions"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-redirect-url"></script>
+  <!-- Autocomplete implementation -->
+  <script src="js/autocomplete.js" type="module"></script>
+  <!-- InstantSearch dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.2/dist/algoliasearch-lite.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.53.0"></script>
   <script src="js/instantSearch.js" type="module"></script>

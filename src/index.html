@@ -6,8 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Algolia Default Styles -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@8/themes/satellite-min.css">
+  <!-- Algolia Default Styles Autocomplete -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic" />
   <link rel="stylesheet" href="./css/main.css">
   <title>Autocomplete</title>
 </head>
@@ -28,15 +28,31 @@
     </nav>
 
     <h1 class="pb-3 font-bold">(Global) Autocomplete</h1>
-    <!-- Some Divs with IDs HERE!! -->
-    <div id="searchbox__container" class="pb-2"></div>
-    <div id="hits-default__container"></div>
-    <div id="pagination" class="p-8 text-center"></div>
+    <!-- Autocomplte container ID-->
+    <div id="autocomplete__container" class="pb-2"></div>
+    <!-- This section represents your pages (except the search result page) -->
+    <main class="container mx-auto px-4 py-6">
+      <article class="bg-white p-6 rounded-lg shadow-md">
+        <div class="max-w-full">
+          <img src="https://source.unsplash.com/random/800x400" alt="Random Image" class="w-full h-auto rounded-lg">
+        </div>
+        <h2 class="mt-4 mb-2 text-xl font-semibold">Lorem Ipsum</h2>
+        <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+          et dolore magna aliqua.</p>
+        <blockquote class="mb-4 px-4 py-2 border-l-4 bg-gray-100 border-gray-400 italic">
+          <p class="text-gray-700">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua."</p>
+          <cite>- John Doe</cite>
+        </blockquote>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat.</p>
+      </article>
+    </main>
   </div>
-  </div>
-  </div>
-  </div>
-  <!-- Algolia Scripts -->
+
+  <!-- Algolia Search Client + Insights and other dependencies -->
+  <script src="https://unpkg.com/PubSub"></script>
   <script>
     var ALGOLIA_INSIGHTS_SRC = "https://cdn.jsdelivr.net/npm/search-insights@2.6.0";
     !function (e, a, t, n, s, i, c) {
@@ -47,8 +63,14 @@
     }(window, document, "script", ALGOLIA_INSIGHTS_SRC, "aa");
   </script>
   <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.17.2/dist/algoliasearch-lite.umd.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.53.0"></script>
-  <script src="js/instantSearch.js" type="module"></script>
+  <!-- Autocomplete Libraries (autocomplete-js, plugins) -->
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-recent-searches"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-algolia-insights"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-query-suggestions"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-plugin-redirect-url"></script>
+  <!-- Autocomplete implementation -->
+  <script src="js/autocomplete.js" type="module"></script>
 </body>
 
 </html>
