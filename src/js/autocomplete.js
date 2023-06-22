@@ -143,7 +143,7 @@ const autocompleteInstance = autocomplete({
   render(params, root) {
     const { elements, render, html, state } = params;
     const { hitsPerPage, nbHits, query, navigator } = state.context;
-    const { recentSearchesPlugin, querySuggestionsPlugin, products } = elements;
+    const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks } = elements;
     let productsLabel = 'Most Popular'
     if (query && query != '' && nbHits > 0) {
       productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
@@ -175,6 +175,7 @@ const autocompleteInstance = autocomplete({
                 <div class="aa-PanelSection--right aa-Products">
                  <h2>${productsLabel} <span class="aa-SubmitSearch--link" onClick="${submitHandler}">See All</span></h2>
                   ${products}
+                  ${staticLinks}
                 </div>
               </div >
            </div>
@@ -226,6 +227,41 @@ const autocompleteInstance = autocomplete({
           noResults: noResultsTemplate
         }
       },
+      {
+        sourceId: 'staticLinks',
+        getItems() {
+          return [
+            {
+              label: 'Some Static Link to FAQ',
+              url: 'https://www.google.com'
+            },
+            {
+              label: 'Other Link to Privacy Policies',
+              url: 'https://www.google.com'
+            }
+          ]
+        },
+        getItemUrl({ item }) {
+          return item.url;
+        },
+        templates: {
+          header() {
+            return 'Check this links out!';
+          },
+          item({ item, html }) {
+            return html`
+              <div class="aa-ItemWrapper custom-source__container">
+                <a class="custom-source__a text-sm text-blue-500" href="${item.url}">
+                  ${item.label} >>>
+                </a>
+              </div>
+            `;
+          },
+          noResults() {
+            return 'No matching Amazing LINKS.';
+          },
+        },
+      }
     ];
   },
 });

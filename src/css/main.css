@@ -335,6 +335,10 @@ body {
   cursor: pointer;
 }
 
+.aa-Source[data-autocomplete-source-id='staticLinks'] {
+  margin-top: 2rem;
+}
+
 /* Media queries */
 @media screen and (min-width: 681px) {
 
