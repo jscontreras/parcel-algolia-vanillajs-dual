@@ -27,7 +27,7 @@ export const searchConfig = {
   recordsIndex: "instant_search",
   noResultsIndex: "instant_search",
   suggestionsIndex: "instant_search_demo_query_suggestions",
-  searchPagePath: "/product-search-results",
+  searchPagePath: "/search.html",
 };
 
 // Export channel subscription
