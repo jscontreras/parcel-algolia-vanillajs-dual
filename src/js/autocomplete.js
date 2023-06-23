@@ -192,6 +192,7 @@ const autocompleteInstance = autocomplete({
     return [
       {
         sourceId: 'products',
+        panelPlacement: 'full-width',
         getItems() {
           return getAlgoliaResults({
             searchClient,
