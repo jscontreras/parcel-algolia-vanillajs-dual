@@ -134,7 +134,7 @@ const autocompleteSubmitHandler = (state) => {
 // Initialize autocomplete-js
 const autocompleteInstance = autocomplete({
   container: '#autocomplete__container',
-  placeholder: 'Search for manly goodness',
+  placeholder: 'Search for products!',
   openOnFocus: true,
   insights: true,
   panelPlacement: 'full-width',
