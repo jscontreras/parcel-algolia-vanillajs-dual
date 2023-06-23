@@ -137,6 +137,7 @@ const autocompleteInstance = autocomplete({
   placeholder: 'Search for manly goodness',
   openOnFocus: true,
   insights: true,
+  panelPlacement: 'full-width',
   onSubmit({ state }) {
     autocompleteSubmitHandler(state);
   },
@@ -192,7 +193,6 @@ const autocompleteInstance = autocomplete({
     return [
       {
         sourceId: 'products',
-        panelPlacement: 'full-width',
         getItems() {
           return getAlgoliaResults({
             searchClient,
