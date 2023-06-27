@@ -137,7 +137,7 @@ const autocompleteInstance = autocomplete({
   placeholder: 'Search for products!',
   openOnFocus: true,
   insights: true,
-  panelPlacement: 'full-width',
+  panelPlacement: 'start',
   onSubmit({ state }) {
     autocompleteSubmitHandler(state);
   },
