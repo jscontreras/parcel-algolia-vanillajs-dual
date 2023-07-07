@@ -13,9 +13,9 @@ export function getQueryParam(param = 'q') {
  * Prints a friendly dollar cents quantity.
  * @param {number} quantity - The quantity to be printed.
  */
-export function printFriendlyDollarCents(quantity) {
-  return quantity.toFixed(2);
-}
+// export function printFriendlyDollarCents(quantity) {
+//   return quantity.toFixed(2);
+// }
 
 /**
  * Finds a collection item from an array of collections based on the sourceId.

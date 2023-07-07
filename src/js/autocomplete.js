@@ -7,7 +7,7 @@ const { createRedirectUrlPlugin } = window['@algolia/autocomplete-plugin-redirec
 // Get Algolia configured clients
 import { searchClient, insightsClient, searchConfig, pubsub } from "./algoliaConfig";
 // Helper functions
-import { printFriendlyDollarCents, getCollection, updateUrlParameter, QUERY_UPDATE_EVT } from "./common";
+import { getCollection, updateUrlParameter, QUERY_UPDATE_EVT } from "./common";
 
 // Events Plugin
 const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({ insightsClient });
@@ -81,9 +81,6 @@ export function itemTemplate(itemTemplateParams) {
     attribute: 'title',
   })}
           </div>
-          <div class="aa-ItemContentDescription">
-            ${`$${printFriendlyDollarCents(item.price)}`}
-          </div>
         </div>
       </div>
     </div>
@@ -137,7 +134,7 @@ const autocompleteInstance = autocomplete({
   placeholder: 'Search for products!',
   openOnFocus: true,
   insights: true,
-  panelPlacement: 'full-width',
+  panelPlacement: 'start',
   onSubmit({ state }) {
     autocompleteSubmitHandler(state);
   },

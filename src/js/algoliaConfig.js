@@ -3,8 +3,8 @@ const { algoliasearch, aa } = window;
 
 
 // Algolia Credentials
-const appId = 'latency';
-const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
+const appId = 'HLT7I6OQRX';
+const apiKey = 'fbd3ce4b101f6f5c43320714127b53a4';
 
 // Initializing Search Client
 export const searchClient = algoliasearch(appId, apiKey);
@@ -22,12 +22,12 @@ export const insightsMiddleware = window.instantsearch ? instantsearch.middlewar
 
 // Configure your indices here
 export const searchConfig = {
-  catalogId: "products",
-  catalogLabel: "All Products",
-  recordsIndex: "instant_search",
-  noResultsIndex: "instant_search",
-  suggestionsIndex: "instant_search_demo_query_suggestions",
-  searchPagePath: "/search.html",
+  // catalogId: "products",
+  // catalogLabel: "All Products",
+  recordsIndex: "main_search",
+  noResultsIndex: "main_search_query_suggestions",
+  suggestionsIndex: "main_search_query_suggestions",
+  searchPagePath: "https://www.uiw.edu/_dev/search-results.html",
 };
 
 // Export channel subscription

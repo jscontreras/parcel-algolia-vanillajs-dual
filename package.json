@@ -4,12 +4,13 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel ./src/index.html --port 3001",
-    "build": "parcel build ./src/index.html --no-source-maps"
+    "build": "parcel build ./src/index.html --no-source-maps",
+    "clean": "rm -rf .parcel-cache && rm -rf dist"
   },
   "devDependencies": {
     "parcel": "^2.9.2",
-    "parcel-namer-relative-to-cwd": "^0.0.0-alpha.0",
     "parcel-namer-rewrite": "^2.0.0-rc.3",
+    "parcel-plugin-x": "./local_modules/parcel-plugin-x",
     "postcss": "^8.4.16",
     "postcss-nested": "^5.0.6",
     "tailwindcss": "^3.1.8"
@@ -18,13 +19,9 @@
   "parcel-namer-rewrite": {
     "hashing": "never",
     "rules": {
-      "styles/(.*).css": "$1.css",
-      "js/(.*).js": "$1.js"
-    },
-    "profiles": {
-      "development": {
-        "disable": true
-      }
+      "index(.*).js": "algolia-search-bar.js",
+      "search(.*).js": "algolia-search-results.js",
+      "index(.*).css":"algolia-styles.css"
     }
   }
 }
