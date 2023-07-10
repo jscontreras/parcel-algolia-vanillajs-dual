@@ -9,6 +9,9 @@ const apiKey = 'fbd3ce4b101f6f5c43320714127b53a4';
 // Initializing Search Client
 export const searchClient = algoliasearch(appId, apiKey);
 
+// as per Sebastian
+useCookie:true
+
 // Insights Analytics Client Initialization
 aa("init", { appId, apiKey });
 // Set token for both Authenticated or unauthenticated users.

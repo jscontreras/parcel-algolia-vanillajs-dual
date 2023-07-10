@@ -64,12 +64,6 @@ export function itemTemplate(itemTemplateParams) {
   return html`
     <div class="aa-ItemWrapper">
     <div class="aa-ItemContent" onClick="${handleItemNavigation}">
-      <div class="aa-ItemContentImage">
-        <img
-          src="${item.image}"
-          alt="${item.name}"
-        />
-      </div>
       <div class="aa-ItemContentBody">
         <div class="aa-ItemContentDescription">
           ${item.product_type}
@@ -131,7 +125,7 @@ const autocompleteSubmitHandler = (state) => {
 // Initialize autocomplete-js
 const autocompleteInstance = autocomplete({
   container: '#autocomplete__container',
-  placeholder: 'Search for products!',
+  placeholder: 'Search here',
   openOnFocus: true,
   insights: true,
   panelPlacement: 'start',
@@ -170,11 +164,6 @@ const autocompleteInstance = autocomplete({
           [html`<h2>Popular Searches</h2>`, querySuggestionsPlugin] : []
         }
                 </div >
-                <div class="aa-PanelSection--right aa-Products">
-                 <h2>${productsLabel} <span class="aa-SubmitSearch--link" onClick="${submitHandler}">See All</span></h2>
-                  ${products}
-                  ${staticLinks}
-                </div>
               </div >
            </div>
           </div > `,
@@ -224,42 +213,10 @@ const autocompleteInstance = autocomplete({
           item: itemTemplate,
           noResults: noResultsTemplate
         }
-      },
-      {
-        sourceId: 'staticLinks',
-        getItems() {
-          return [
-            {
-              label: 'Some Static Link to FAQ',
-              url: 'https://www.google.com'
-            },
-            {
-              label: 'Other Link to Privacy Policies',
-              url: 'https://www.google.com'
-            }
-          ]
-        },
-        getItemUrl({ item }) {
-          return item.url;
-        },
-        templates: {
-          header() {
-            return 'Check this links out!';
-          },
-          item({ item, html }) {
-            return html`
-              <div class="aa-ItemWrapper custom-source__container">
-                <a class="custom-source__a text-sm text-blue-500" href="${item.url}">
-                  ${item.label} >>>
-                </a>
-              </div>
-            `;
-          },
-          noResults() {
-            return 'No matching Amazing LINKS.';
-          },
-        },
       }
+      
+        
+      
     ];
   },
 });

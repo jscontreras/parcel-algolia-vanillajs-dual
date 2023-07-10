@@ -69,13 +69,14 @@ const myHitsCustomTemplate = instantsearch.widgets.hits({
       </a>
       <img src="${hit.image}"/>
       <p>${components.Snippet({ attribute: 'description', hit })}</p>
-      <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded absolute bottom-5" onClick="${evt => {
-          evt.preventDefault();
-          sendEvent('conversion', hit, 'Product Added to Cart');
-        }}">
-        Add to Cart +
-      </button>
-    </article>`
+      </article>`
+      // <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded absolute bottom-5" onClick="${evt => {
+      //     evt.preventDefault();
+      //     sendEvent('conversion', hit, 'Product Added to Cart');
+      //   }}">
+      //   Add to Cart +
+      // </button>
+    // </article>`
     }
   }
 })
