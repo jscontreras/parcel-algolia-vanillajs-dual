@@ -42,7 +42,7 @@ const redirectUrlPlugin = createRedirectUrlPlugin({
 const querySuggestionsPlugin = createQuerySuggestionsPlugin({
   searchClient,
   indexName: searchConfig.suggestionsIndex,
-  limit: 6,
+  limit: 3,
   transformSource({ source }) {
     return {
       ...source,
@@ -65,14 +65,11 @@ export function itemTemplate(itemTemplateParams) {
     <div class="aa-ItemWrapper">
     <div class="aa-ItemContent" onClick="${handleItemNavigation}">
       <div class="aa-ItemContentBody">
-        <div class="aa-ItemContentDescription">
-          ${item.product_type}
-        </div>
         <div class="aa-ProductItemContentFooter">
           <div class="aa-ItemContentTitle">
             ${components.Highlight({
     hit: item,
-    attribute: 'title',
+    attribute: 'name',
   })}
           </div>
         </div>
@@ -128,48 +125,48 @@ const autocompleteInstance = autocomplete({
   placeholder: 'Search here',
   openOnFocus: true,
   insights: true,
-  panelPlacement: 'start',
+  // panelPlacement: 'start',
   onSubmit({ state }) {
     autocompleteSubmitHandler(state);
   },
-  render(params, root) {
-    const { elements, render, html, state } = params;
-    const { hitsPerPage, nbHits, query, navigator } = state.context;
-    const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks } = elements;
-    let productsLabel = 'Most Popular'
-    if (query && query != '' && nbHits > 0) {
-      productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
-    } else if (query && query != '' && nbHits == 0) {
-      productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look on our top sellers`;
-    }
-    const submitHandler = (evt) => {
-      evt.preventDefault();
-      if (state.query) {
-         window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
-      } else {
-          window.location.href = `${searchConfig.searchPagePath}`;
-      }
-    }
+  // render(params, root) {
+  //   const { elements, render, html, state } = params;
+  //   const { hitsPerPage, nbHits, query, navigator } = state.context;
+  //   const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks } = elements;
+  //   let productsLabel = 'Most Popular'
+  //   if (query && query != '' && nbHits > 0) {
+  //     productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
+  //   } else if (query && query != '' && nbHits == 0) {
+  //     productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look on our top sellers`;
+  //   }
+  //   const submitHandler = (evt) => {
+  //     evt.preventDefault();
+  //     if (state.query) {
+  //        window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
+  //     } else {
+  //         window.location.href = `${searchConfig.searchPagePath}`;
+  //     }
+  //   }
 
-    render(
-      html`
-          <div class="aa-PanelLayout aa-Panel--scrollable">
-            <div class="aa-SearchPanel">
-              <div class="aa-PanelSections">
-                <div class="aa-PanelSection--left">
-                    ${getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0 ?
-          [html`<h2>Recent Searches</h2>`, recentSearchesPlugin] : []
-        }
-                  ${getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0 ?
-          [html`<h2>Popular Searches</h2>`, querySuggestionsPlugin] : []
-        }
-                </div >
-              </div >
-           </div>
-          </div > `,
-      root
-    );
-  },
+  //   render(
+  //     html`
+  //         <div class="aa-PanelLayout aa-Panel--scrollable">
+  //           <div class="aa-SearchPanel">
+  //             <div class="aa-PanelSections">
+  //               <div class="aa-PanelSection--left">
+  //                   ${getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0 ?
+  //         [html`<h2>Recent Searches</h2>`, recentSearchesPlugin] : []
+  //       }
+  //                 ${getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0 ?
+  //         [html`<h2>Popular Searches</h2>`, querySuggestionsPlugin] : []
+  //       }
+  //               </div >
+  //             </div >
+  //          </div>
+  //         </div > `,
+  //     root
+  //   );
+  // },
   plugins: [recentSearchesPlugin, querySuggestionsPlugin, algoliaInsightsPlugin, redirectUrlPlugin],
   initialState: {
     // This uses the `q` query parameter as the initial query
@@ -178,7 +175,7 @@ const autocompleteInstance = autocomplete({
   getSources({ query, setContext }) {
     return [
       {
-        sourceId: 'products',
+        sourceId: 'generalInformation',
         getItems() {
           return getAlgoliaResults({
             searchClient,
@@ -187,21 +184,21 @@ const autocompleteInstance = autocomplete({
                 indexName: searchConfig.recordsIndex,
                 query,
                 params: {
-                  hitsPerPage: 4,
+                  hitsPerPage: 10,
                   attributesToSnippet: ['name:10', 'description:35'],
                   snippetEllipsisText: '…',
                 },
               },
-              {
-                // Making a second query for Non-Results-pages
-                indexName: searchConfig.noResultsIndex,
-                query: '',
-                params: {
-                  hitsPerPage: 4,
-                  attributesToSnippet: ['name:10', 'description:35'],
-                  snippetEllipsisText: '…',
-                },
-              },
+              // {
+              //   // Making a second query for Non-Results-pages
+              //   indexName: searchConfig.noResultsIndex,
+              //   query: '',
+              //   params: {
+              //     hitsPerPage: 4,
+              //     attributesToSnippet: ['name:10', 'description:35'],
+              //     snippetEllipsisText: '…',
+              //   },
+              // },
 
             ],
             getItemUrl({ item }) {

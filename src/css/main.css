@@ -121,12 +121,12 @@ body {
   margin: 0 auto;
 }
 
-.aa-Panel--scrollable {
+/* .aa-Panel--scrollable {
   display: flex;
   justify-content: center;
   padding-bottom: 20px;
   max-height: 100vh;
-}
+} */
 
 .aa-SearchPanel {
   max-width: 1200px;
