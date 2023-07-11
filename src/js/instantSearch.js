@@ -96,7 +96,7 @@ const myHitsCustomTemplate = instantsearch.widgets.hits({
   templates: {
     item: itemTemplate,
     empty(results, { html }) {
-      return html`<div class="no-results-copy">No results for <q>${results.query}</q>, but take a look on our best Sellers!!</div>`;
+      return html`<div class="no-results-copy">No results for <q>${results.query}</q>, but take a look at our best Sellers!!</div>`;
     },
   }
 });
