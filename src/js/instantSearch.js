@@ -3,6 +3,10 @@ import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoli
 import { getQueryParam, QUERY_UPDATE_EVT } from './common';
 const { connectSearchBox } = instantsearch.connectors;
 
+// Main flag
+const store = {
+  hasResults: true
+};
 
 // Read the query attribute if any
 const initialQuery = getQueryParam();
@@ -85,8 +89,15 @@ function itemTemplate(hit, { html, components, sendEvent }) {
 // Template for rendering results
 const myHitsCustomTemplate = instantsearch.widgets.hits({
   container: '#hits-default__container',
+  transformItems(hits) {
+    store.hasResults = hits.length > 0;
+    return hits;
+  },
   templates: {
-    item: itemTemplate
+    item: itemTemplate,
+    empty(results, { html }) {
+      return html`<div class="no-results-copy">No results for <q>${results.query}</q>, but take a look on our best Sellers!!</div>`;
+    },
   }
 });
 
@@ -106,6 +117,12 @@ const nonResultsIndex = instantsearch.widgets.index({
     container: '#hits-non-results__container',
     templates: {
       item: itemTemplate
+    },
+    transformItems(items) {
+      if (store.hasResults) {
+        return [];
+      }
+      return items;
     }
   })]
 );

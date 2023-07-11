@@ -74,6 +74,10 @@
   display: inline-block;
 }
 
+.no-results-copy {
+  padding: 1em;
+}
+
 article {
   padding: 10px;
 
