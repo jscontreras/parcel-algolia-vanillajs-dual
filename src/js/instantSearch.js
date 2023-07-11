@@ -54,35 +54,61 @@ const customSearchBoxWidget = customSearchBox({
   container: '#searchbox__container',
 });
 
-// Template for rendering results
-const myHitsCustomTemplate = instantsearch.widgets.hits({
-  container: '#hits-default__container',
-  templates: {
-    item(hit, { html, components, sendEvent }) {
-      return html`<article class="pb-8">
+/**
+ * Rendering Hit function
+ * @param {} hit
+ * @param {*} param1
+ * @returns
+ */
+function itemTemplate(hit, { html, components, sendEvent }) {
+  return html`<article class="pb-8">
       <a href="#" onClick="${evt => {
-          evt.preventDefault();
-          sendEvent('click', hit, 'Result Clicked');
-          window.location.href = hit.url;
-        }}" class="text-blue-400">
+      evt.preventDefault();
+      sendEvent('click', hit, 'Result Clicked');
+      window.location.href = hit.url;
+    }}" class="text-blue-400">
         ${components.Highlight({ attribute: 'name', hit })}
       </a>
       <img src="${hit.image}"/>
       <p>${components.Snippet({ attribute: 'description', hit })}</p>
       <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded absolute bottom-5" onClick="${evt => {
-          evt.preventDefault();
-          sendEvent('conversion', hit, 'Product Added to Cart');
-        }}">
+      evt.preventDefault();
+      sendEvent('conversion', hit, 'Product Added to Cart');
+    }}">
         Add to Cart +
       </button>
     </article>`
-    }
+}
+
+
+
+// Template for rendering results
+const myHitsCustomTemplate = instantsearch.widgets.hits({
+  container: '#hits-default__container',
+  templates: {
+    item: itemTemplate
   }
-})
+});
 
 const myPaginator = instantsearch.widgets.pagination({
   container: '#pagination',
 })
+
+// Index for non-results pages rendering
+const nonResultsIndex = instantsearch.widgets.index({
+  indexName: searchConfig.noResultsIndex,
+  indexId: searchConfig.noResultsIndex,
+}).addWidgets([
+  instantsearch.widgets.configure({
+    query: ''
+  }),
+  instantsearch.widgets.hits({
+    container: '#hits-non-results__container',
+    templates: {
+      item: itemTemplate
+    }
+  })]
+);
 
 
 // Array for InstantSearch widgets
@@ -90,7 +116,8 @@ const widgets = [
   myInstantSearchGlobalConfig,
   customSearchBoxWidget,
   myHitsCustomTemplate,
-  myPaginator
+  myPaginator,
+  nonResultsIndex
 ]
 
 // Adding the widgets to the InstantSearch instance

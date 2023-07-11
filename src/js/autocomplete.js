@@ -143,7 +143,7 @@ const autocompleteInstance = autocomplete({
   },
   render(params, root) {
     const { elements, render, html, state } = params;
-    const { hitsPerPage, nbHits, query, navigator } = state.context;
+    const { hitsPerPage, nbHits, query } = state.context;
     const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks } = elements;
     let productsLabel = 'Most Popular'
     if (query && query != '' && nbHits > 0) {
@@ -151,6 +151,7 @@ const autocompleteInstance = autocomplete({
     } else if (query && query != '' && nbHits == 0) {
       productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look on our top sellers`;
     }
+    console.log('productsLabel', productsLabel, nbHits)
     const submitHandler = (evt) => {
       evt.preventDefault();
       if (state.query) {
@@ -159,13 +160,14 @@ const autocompleteInstance = autocomplete({
           window.location.href = `${searchConfig.searchPagePath}`;
       }
     }
-
+    const leftColumnContent = (getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0) ||
+      (getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0);
     render(
       html`
           <div class="aa-PanelLayout aa-Panel--scrollable">
             <div class="aa-SearchPanel">
               <div class="aa-PanelSections">
-                <div class="aa-PanelSection--left">
+                <div class="aa-PanelSection--left ${leftColumnContent ? '' : 'hidden'}">
                     ${getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0 ?
           [html`<h2>Recent Searches</h2>`, recentSearchesPlugin] : []
         }
@@ -220,6 +222,21 @@ const autocompleteInstance = autocomplete({
             ],
             getItemUrl({ item }) {
               return item.url
+            },
+            transformResponse(response) {
+              const { hits, results } = response;
+              setContext({
+                sourceId: 'products',
+                navigator: autocompleteInstance.navigator,
+                noResultsHits: hits[1],
+                query,
+                hits,
+                nbHits: results[0].nbHits,
+                hitsPerPage: results[0].hitsPerPage
+              })
+              return hits[0].map(hit => {
+                return { ...hit }
+              });
             },
           });
         },

@@ -127,6 +127,9 @@ body {
   padding-bottom: 20px;
   max-height: 100vh;
 }
+.aa-Panel--scrollable.hidden {
+  display: none;
+}
 
 .aa-SearchPanel {
   max-width: 1200px;
