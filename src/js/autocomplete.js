@@ -149,7 +149,7 @@ const autocompleteInstance = autocomplete({
     if (query && query != '' && nbHits > 0) {
       productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
     } else if (query && query != '' && nbHits == 0) {
-      productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look on our top sellers`;
+      productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look at our top sellers`;
     }
     console.log('productsLabel', productsLabel, nbHits)
     const submitHandler = (evt) => {
