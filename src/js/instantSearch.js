@@ -29,7 +29,9 @@ const myInstantSearch = instantsearch({
 
 // Instant Search Global Configuration Widget
 const myInstantSearchGlobalConfig = instantsearch.widgets.configure({
-  hitsPerPage: 10,
+  hitsPerPage: 30,
+  analyticsTags: ['is-info-results-page'],
+  ruleContexts: ['is-info-results-page'],
 });
 
 // Add custom SearchBox render that listens to Autocomplete but doesn't render anything
@@ -59,24 +61,16 @@ const myHitsCustomTemplate = instantsearch.widgets.hits({
   container: '#hits-default__container',
   templates: {
     item(hit, { html, components, sendEvent }) {
-      return html`<article class="pb-8">
+      return html`<article class="general-info-item">
       <a href="#" onClick="${evt => {
           evt.preventDefault();
           sendEvent('click', hit, 'Result Clicked');
           window.location.href = hit.url;
-        }}" class="text-blue-400">
+        }}" class="general-info-title">
         ${components.Highlight({ attribute: 'name', hit })}
       </a>
-      <img src="${hit.image}"/>
-      <p>${components.Snippet({ attribute: 'description', hit })}</p>
+      <p>${components.Highlight({ attribute: 'description', hit })}</p>
       </article>`
-      // <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded absolute bottom-5" onClick="${evt => {
-      //     evt.preventDefault();
-      //     sendEvent('conversion', hit, 'Product Added to Cart');
-      //   }}">
-      //   Add to Cart +
-      // </button>
-    // </article>`
     }
   }
 })

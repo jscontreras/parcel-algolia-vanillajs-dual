@@ -58,7 +58,9 @@ export function itemTemplate(itemTemplateParams) {
   const { item, components, html, state } = itemTemplateParams;
   const handleItemNavigation = (evt) => {
     evt.preventDefault();
-    console.log('Implementing this later!!');
+    if (item.url) {
+      window.location.assign(item.url);
+    }
   }
 
   return html`
@@ -72,6 +74,12 @@ export function itemTemplate(itemTemplateParams) {
     attribute: 'name',
   })}
           </div>
+          <p class="item-description">
+          ${components.Snippet({
+    hit: item,
+    attribute: 'description',
+  })}
+          </p>
         </div>
       </div>
     </div>
@@ -110,7 +118,6 @@ const autocompleteSubmitHandler = (state) => {
       window.location.assign(`${searchConfig.searchPagePath}`);
     }
   } else {
-    console.log('Sending evnt!!', state.query)
     pubsub.publish(QUERY_UPDATE_EVT, {
       query: state.query ? state.query : '',
       index: searchConfig.recordsIndex,
@@ -125,48 +132,69 @@ const autocompleteInstance = autocomplete({
   placeholder: 'Search here',
   openOnFocus: true,
   insights: true,
-  // panelPlacement: 'start',
+  panelPlacement: 'full-width',
   onSubmit({ state }) {
     autocompleteSubmitHandler(state);
   },
-  // render(params, root) {
-  //   const { elements, render, html, state } = params;
-  //   const { hitsPerPage, nbHits, query, navigator } = state.context;
-  //   const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks } = elements;
-  //   let productsLabel = 'Most Popular'
-  //   if (query && query != '' && nbHits > 0) {
-  //     productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
-  //   } else if (query && query != '' && nbHits == 0) {
-  //     productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look on our top sellers`;
-  //   }
-  //   const submitHandler = (evt) => {
-  //     evt.preventDefault();
-  //     if (state.query) {
-  //        window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
-  //     } else {
-  //         window.location.href = `${searchConfig.searchPagePath}`;
-  //     }
-  //   }
-
-  //   render(
-  //     html`
-  //         <div class="aa-PanelLayout aa-Panel--scrollable">
-  //           <div class="aa-SearchPanel">
-  //             <div class="aa-PanelSections">
-  //               <div class="aa-PanelSection--left">
-  //                   ${getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0 ?
-  //         [html`<h2>Recent Searches</h2>`, recentSearchesPlugin] : []
-  //       }
-  //                 ${getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0 ?
-  //         [html`<h2>Popular Searches</h2>`, querySuggestionsPlugin] : []
-  //       }
-  //               </div >
-  //             </div >
-  //          </div>
-  //         </div > `,
-  //     root
-  //   );
-  // },
+  render(params, root) {
+    const { elements, render, html, state } = params;
+    const { hitsPerPage, nbHits, query, navigator } = state.context;
+    const { recentSearchesPlugin, querySuggestionsPlugin, generalInformation } = elements;
+    let productsLabel = 'General Information'
+    if (query && query != '' && nbHits > 0) {
+      productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
+    } else if (query && query != '' && nbHits == 0) {
+      productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look on our top sellers`;
+    }
+    const submitHandler = (evt) => {
+      evt.preventDefault();
+      if (state.query) {
+        window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
+      } else {
+        window.location.href = `${searchConfig.searchPagePath}`;
+      }
+    }
+    // render(
+    //   html`
+    //     <div class="aa-Content">
+    //     ${getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0 ?
+    //       [html`<h2>Recent Searches</h2>`, recentSearchesPlugin] : []
+    //     }
+    //    ${getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0 ?
+    //       [html`<h2>Popular Searches</h2>`, querySuggestionsPlugin] : []
+    //     }
+    //     ${getCollection(state.collections, "generalInformation") && getCollection(state.collections, "generalInformation").items.length > 0 ?
+    //     [html`<h2>General Information</h2>`, generalInformation] : []
+    //     }
+    //     </div>
+    //    `,
+    //   root
+    // );
+    const leftColumnContent = (getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0) ||
+      (getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0);
+    render(
+      html`
+          <div class="aa-PanelLayout aa-Panel--scrollable ${leftColumnContent ? '' : 'hidden'}">
+            <div class="aa-SearchPanel aa-Content">
+              <div class="aa-PanelSections">
+                <div class="aa-PanelSection--left">
+                    ${getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0 ?
+          [html`<h2>Recent Searches</h2>`, recentSearchesPlugin] : []
+        }
+                  ${getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0 ?
+          [html`<h2>Popular Searches</h2>`, querySuggestionsPlugin] : []
+        }
+                </div >
+                <div class="aa-PanelSection--right aa-Products">
+                 <h2>${productsLabel} <span class="aa-SubmitSearch--link" onClick="${submitHandler}">See All</span></h2>
+                  ${generalInformation}
+                </div>
+              </div >
+           </div>
+          </div > `,
+      root
+    );
+  },
   plugins: [recentSearchesPlugin, querySuggestionsPlugin, algoliaInsightsPlugin, redirectUrlPlugin],
   initialState: {
     // This uses the `q` query parameter as the initial query
@@ -184,9 +212,11 @@ const autocompleteInstance = autocomplete({
                 indexName: searchConfig.recordsIndex,
                 query,
                 params: {
-                  hitsPerPage: 10,
-                  attributesToSnippet: ['name:10', 'description:35'],
+                  hitsPerPage: 5,
+                  attributesToSnippet: ['name:35', 'description:35'],
                   snippetEllipsisText: '…',
+                  analyticsTags: ['autocomplete-search'],
+                  ruleContexts: ['autocomplete-search'],
                 },
               },
               // {
@@ -211,9 +241,9 @@ const autocompleteInstance = autocomplete({
           noResults: noResultsTemplate
         }
       }
-      
-        
-      
+
+
+
     ];
   },
 });

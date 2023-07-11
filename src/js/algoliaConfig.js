@@ -9,13 +9,8 @@ const apiKey = 'fbd3ce4b101f6f5c43320714127b53a4';
 // Initializing Search Client
 export const searchClient = algoliasearch(appId, apiKey);
 
-// as per Sebastian
-useCookie:true
-
 // Insights Analytics Client Initialization
-aa("init", { appId, apiKey });
-// Set token for both Authenticated or unauthenticated users.
-aa('setUserToken', 'ma-user-999');
+aa("init", { appId, apiKey, useCookie: true });
 
 // Insights Client
 export const insightsClient = aa;
@@ -30,7 +25,7 @@ export const searchConfig = {
   recordsIndex: "main_search",
   noResultsIndex: "main_search_query_suggestions",
   suggestionsIndex: "main_search_query_suggestions",
-  searchPagePath: "https://www.uiw.edu/_dev/search-results.html",
+  searchPagePath: "/_dev/search-results.html",
 };
 
 // Export channel subscription
