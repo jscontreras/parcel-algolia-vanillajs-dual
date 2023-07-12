@@ -74,6 +74,10 @@
   display: inline-block;
 }
 
+.ais-Pagination--noRefinement {
+  display: none;
+}
+
 .no-results-copy {
   padding: 1em;
 }
