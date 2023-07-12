@@ -1,6 +1,8 @@
 // Getting Dependencies from window
 const { algoliasearch, aa } = window;
 
+// Dev mode detector
+const environment = process.env.NODE_ENV || false;
 
 // Algolia Credentials
 const appId = 'latency';
