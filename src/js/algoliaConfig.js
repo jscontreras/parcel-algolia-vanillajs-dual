@@ -22,13 +22,14 @@ export const insightsClient = aa;
 export const insightsMiddleware = window.instantsearch ? instantsearch.middlewares.createInsightsMiddleware({insightsClient: aa}): {};
 
 // Configure your indices here
-export const searchConfig = {
+export const searchConfig = preProcessConfig({
   catalogId: "products",
   catalogLabel: "All Products",
   recordsIndex: "instant_search",
   noResultsIndex: "instant_search",
   suggestionsIndex: "instant_search_demo_query_suggestions",
-  searchPagePath: "/search.html",
+  // The URL used for the search results page.
+  searchPagePath: "/search",
   autocompleteTags: {
     recordsSearch: ['autocomplete-search'],
     nonResults: ['autocomplete-non-results'],
@@ -37,7 +38,7 @@ export const searchConfig = {
     recordsSearch: ['ais-results-page'],
     nonResults: ['ais-non-results-page'],
   },
-};
+});
 
 // Export channel subscription
 export const pubsub = new PubSub();
@@ -66,4 +67,18 @@ function clientProxy(clientBase) {
       return clientBase.search(refinedRequests);
     }
   };
+}
+
+/**
+ * Controls configuration for local development ease
+ * @param {} config
+ */
+function preProcessConfig(config) {
+  if (environment === 'development') {
+    return {
+      ...config,
+      searchPagePath: '/search.html'
+    }
+  }
+  return config;
 }
