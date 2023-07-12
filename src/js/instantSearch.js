@@ -33,7 +33,9 @@ const myInstantSearch = instantsearch({
 
 // Instant Search Global Configuration Widget
 const myInstantSearchGlobalConfig = instantsearch.widgets.configure({
-  hitsPerPage: 10,
+  hitsPerPage: 24,
+  ruleContexts: searchConfig.instantSearchTags.recordsSearch,
+  analyticsTags: searchConfig.instantSearchTags.recordsSearch,
 });
 
 // Add custom SearchBox render that listens to Autocomplete but doesn't render anything
@@ -111,7 +113,9 @@ const nonResultsIndex = instantsearch.widgets.index({
   indexId: searchConfig.noResultsIndex,
 }).addWidgets([
   instantsearch.widgets.configure({
-    query: ''
+    query: '',
+    ruleContexts: searchConfig.instantSearchTags.nonResults,
+    analyticsTags: searchConfig.instantSearchTags.nonResults,
   }),
   instantsearch.widgets.hits({
     container: '#hits-non-results__container',

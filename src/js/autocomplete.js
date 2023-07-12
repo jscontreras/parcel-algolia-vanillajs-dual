@@ -206,6 +206,8 @@ const autocompleteInstance = autocomplete({
                   hitsPerPage: 4,
                   attributesToSnippet: ['name:10', 'description:35'],
                   snippetEllipsisText: '…',
+                  ruleContexts: searchConfig.autocompleteTags.recordsSearch,
+                  analyticsTags: searchConfig.autocompleteTags.recordsSearch,
                 },
               },
               {
@@ -216,9 +218,10 @@ const autocompleteInstance = autocomplete({
                   hitsPerPage: 4,
                   attributesToSnippet: ['name:10', 'description:35'],
                   snippetEllipsisText: '…',
+                  ruleContexts: searchConfig.autocompleteTags.nonResults,
+                  analyticsTags: searchConfig.autocompleteTags.nonResults,
                 },
               },
-
             ],
             getItemUrl({ item }) {
               return item.url

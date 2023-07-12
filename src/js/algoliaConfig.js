@@ -7,12 +7,13 @@ const appId = 'latency';
 const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
 
 // Initializing Search Client
-export const searchClient = algoliasearch(appId, apiKey);
+const clientBase = algoliasearch(appId, apiKey);
+export const searchClient = { ...clientBase, ...clientProxy(clientBase) };
 
 // Insights Analytics Client Initialization
-aa("init", { appId, apiKey });
+aa("init", { appId, apiKey, useCookie: true });
 // Set token for both Authenticated or unauthenticated users.
-aa('setUserToken', 'ma-user-999');
+// aa('setUserToken', 'ma-user-999');
 
 // Insights Client
 export const insightsClient = aa;
@@ -28,7 +29,41 @@ export const searchConfig = {
   noResultsIndex: "instant_search",
   suggestionsIndex: "instant_search_demo_query_suggestions",
   searchPagePath: "/search.html",
+  autocompleteTags: {
+    recordsSearch: ['autocomplete-search'],
+    nonResults: ['autocomplete-non-results'],
+  },
+  instantSearchTags: {
+    recordsSearch: ['ais-results-page'],
+    nonResults: ['ais-non-results-page'],
+  },
 };
 
 // Export channel subscription
 export const pubsub = new PubSub();
+
+
+/**
+ * Advance Algolia client config overrider.
+ * @param {*} clientBase
+ * @returns
+ */
+function clientProxy(clientBase) {
+  return {
+    search(requests) {
+      const refinedRequests = requests.map(request => {
+        // Get the non-results query from instant search and remove the instantSearch inherited tags
+        if (request.indexName == searchConfig.noResultsIndex && request.params && request.params.ruleContexts) {
+          const isNonResultsTagged = request.params.ruleContexts.find(context => searchConfig.instantSearchTags.nonResults.includes(context));
+          if(isNonResultsTagged) {
+            request.params.ruleContexts = request.params.ruleContexts.filter(context => {
+              return !searchConfig.instantSearchTags.recordsSearch.includes(context);
+            })
+          }
+        }
+        return request;
+      })
+      return clientBase.search(refinedRequests);
+    }
+  };
+}
