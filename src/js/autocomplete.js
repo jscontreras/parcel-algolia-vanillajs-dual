@@ -1,13 +1,14 @@
-const { autocomplete, getAlgoliaResults } = window['@algolia/autocomplete-js'];
-const { createLocalStorageRecentSearchesPlugin } = window['@algolia/autocomplete-plugin-recent-searches'];
-const { createAlgoliaInsightsPlugin } = window['@algolia/autocomplete-plugin-algolia-insights'];
-const { createQuerySuggestionsPlugin } = window['@algolia/autocomplete-plugin-query-suggestions'];
-const { createRedirectUrlPlugin } = window['@algolia/autocomplete-plugin-redirect-url'];
+import { autocomplete, getAlgoliaResults } from '@algolia/autocomplete-js';
+import { createAlgoliaInsightsPlugin } from '@algolia/autocomplete-plugin-algolia-insights';
+import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
+import { createRedirectUrlPlugin } from '@algolia/autocomplete-plugin-redirect-url';
+import '@algolia/autocomplete-theme-classic';
 
 // Get Algolia configured clients
-import { searchClient, insightsClient, searchConfig, pubsub } from "./algoliaConfig";
+import { searchClient, insightsClient, searchConfig, pubsub } from "./algoliaConfig.js";
 // Helper functions
-import { printFriendlyDollarCents, getCollection, updateUrlParameter, QUERY_UPDATE_EVT } from "./common";
+import { getCollection, updateUrlParameter, QUERY_UPDATE_EVT } from "./common.js";
 
 // Events Plugin
 const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({ insightsClient });
@@ -82,7 +83,7 @@ export function itemTemplate(itemTemplateParams) {
   })}
           </div>
           <div class="aa-ItemContentDescription">
-            ${`$${printFriendlyDollarCents(item.price)}`}
+            ${`$${item.price}`}
           </div>
         </div>
       </div>
@@ -122,7 +123,6 @@ const autocompleteSubmitHandler = (state) => {
       window.location.assign(`${searchConfig.searchPagePath}`);
     }
   } else {
-    console.log('Sending evnt!!', state.query)
     pubsub.publish(QUERY_UPDATE_EVT, {
       query: state.query ? state.query : '',
       index: searchConfig.recordsIndex,
@@ -143,29 +143,30 @@ const autocompleteInstance = autocomplete({
   },
   render(params, root) {
     const { elements, render, html, state } = params;
-    const { hitsPerPage, nbHits, query, navigator } = state.context;
+    const { hitsPerPage, nbHits, query } = state.context;
     const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks } = elements;
     let productsLabel = 'Most Popular'
     if (query && query != '' && nbHits > 0) {
       productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
     } else if (query && query != '' && nbHits == 0) {
-      productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look on our top sellers`;
+      productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look at our top sellers`;
     }
     const submitHandler = (evt) => {
       evt.preventDefault();
       if (state.query) {
-         window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
+        window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
       } else {
-          window.location.href = `${searchConfig.searchPagePath}`;
+        window.location.href = `${searchConfig.searchPagePath}`;
       }
     }
-
+    const leftColumnContent = (getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0) ||
+      (getCollection(state.collections, "querySuggestionsPlugin") && getCollection(state.collections, "querySuggestionsPlugin").items.length > 0);
     render(
       html`
           <div class="aa-PanelLayout aa-Panel--scrollable">
             <div class="aa-SearchPanel">
               <div class="aa-PanelSections">
-                <div class="aa-PanelSection--left">
+                <div class="aa-PanelSection--left ${leftColumnContent ? '' : 'hidden'}">
                     ${getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0 ?
           [html`<h2>Recent Searches</h2>`, recentSearchesPlugin] : []
         }
@@ -204,6 +205,8 @@ const autocompleteInstance = autocomplete({
                   hitsPerPage: 4,
                   attributesToSnippet: ['name:10', 'description:35'],
                   snippetEllipsisText: '…',
+                  ruleContexts: searchConfig.autocompleteTags.recordsSearch,
+                  analyticsTags: searchConfig.autocompleteTags.recordsSearch,
                 },
               },
               {
@@ -214,12 +217,28 @@ const autocompleteInstance = autocomplete({
                   hitsPerPage: 4,
                   attributesToSnippet: ['name:10', 'description:35'],
                   snippetEllipsisText: '…',
+                  ruleContexts: searchConfig.autocompleteTags.nonResults,
+                  analyticsTags: searchConfig.autocompleteTags.nonResults,
                 },
               },
-
             ],
             getItemUrl({ item }) {
               return item.url
+            },
+            transformResponse(response) {
+              const { hits, results } = response;
+              setContext({
+                sourceId: 'products',
+                navigator: autocompleteInstance.navigator,
+                noResultsHits: hits[1],
+                query,
+                hits,
+                nbHits: results[0].nbHits,
+                hitsPerPage: results[0].hitsPerPage
+              })
+              return hits[0].map(hit => {
+                return { ...hit }
+              });
             },
           });
         },

@@ -74,6 +74,14 @@
   display: inline-block;
 }
 
+.ais-Pagination--noRefinement {
+  display: none;
+}
+
+.no-results-copy {
+  padding: 1em;
+}
+
 article {
   padding: 10px;
 
@@ -126,6 +134,9 @@ body {
   justify-content: center;
   padding-bottom: 20px;
   max-height: 100vh;
+}
+.aa-Panel--scrollable.hidden {
+  display: none;
 }
 
 .aa-SearchPanel {
