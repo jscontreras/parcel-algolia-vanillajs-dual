@@ -1,7 +1,9 @@
-const { instantsearch } = window;
-import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig";
-import { getQueryParam, QUERY_UPDATE_EVT } from './common';
-const { connectSearchBox } = instantsearch.connectors;
+import instantsearch from 'instantsearch.js';
+import { hits, index, configure, pagination } from 'instantsearch.js/es/widgets';
+import { getQueryParam, QUERY_UPDATE_EVT } from './common.js';
+import { connectSearchBox } from 'instantsearch.js/es/connectors';
+import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig.js";
+import "instantsearch.css/themes/satellite-min.css"
 
 // Main flag
 const store = {
@@ -11,6 +13,8 @@ const store = {
 // Read the query attribute if any
 const initialQuery = getQueryParam();
 const initialUiState = {};
+initialUiState[searchConfig.noResultsIndex] = { query: '' };
+
 // Update InitialUIState if there is a query in the url
 if (initialQuery !== "") {
   initialUiState[searchConfig.recordsIndex] = {
@@ -32,7 +36,7 @@ const myInstantSearch = instantsearch({
  */
 
 // Instant Search Global Configuration Widget
-const myInstantSearchGlobalConfig = instantsearch.widgets.configure({
+const myInstantSearchGlobalConfig = configure({
   hitsPerPage: 24,
   ruleContexts: searchConfig.instantSearchTags.recordsSearch,
   analyticsTags: searchConfig.instantSearchTags.recordsSearch,
@@ -48,6 +52,7 @@ const renderSearchBox = ({ refine, instantSearchInstance }, isFirstRender) => {
       }
     });
   }
+  return '';
 }
 
 // Connect custom searchbox render with connectSearchBox
@@ -86,10 +91,11 @@ function itemTemplate(hit, { html, components, sendEvent }) {
     </article>`
 }
 
-
+// Virtual search box for non-results index
+const virtualSearchBox = connectSearchBox(() => null);
 
 // Template for rendering results
-const myHitsCustomTemplate = instantsearch.widgets.hits({
+const myHitsCustomTemplate = hits({
   container: '#hits-default__container',
   transformItems(hits) {
     store.hasResults = hits.length > 0;
@@ -103,21 +109,22 @@ const myHitsCustomTemplate = instantsearch.widgets.hits({
   }
 });
 
-const myPaginator = instantsearch.widgets.pagination({
+const myPaginator = pagination({
   container: '#pagination',
 })
 
 // Index for non-results pages rendering
-const nonResultsIndex = instantsearch.widgets.index({
+const nonResultsIndex = index({
   indexName: searchConfig.noResultsIndex,
-  indexId: searchConfig.noResultsIndex,
+  indexId: `${searchConfig.noResultsIndex}--noREsults}`,
 }).addWidgets([
-  instantsearch.widgets.configure({
+  configure({
     query: '',
     ruleContexts: searchConfig.instantSearchTags.nonResults,
     analyticsTags: searchConfig.instantSearchTags.nonResults,
   }),
-  instantsearch.widgets.hits({
+  virtualSearchBox({}),
+  hits({
     container: '#hits-non-results__container',
     templates: {
       item: itemTemplate

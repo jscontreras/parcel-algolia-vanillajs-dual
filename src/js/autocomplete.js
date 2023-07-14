@@ -1,13 +1,14 @@
-const { autocomplete, getAlgoliaResults } = window['@algolia/autocomplete-js'];
-const { createLocalStorageRecentSearchesPlugin } = window['@algolia/autocomplete-plugin-recent-searches'];
-const { createAlgoliaInsightsPlugin } = window['@algolia/autocomplete-plugin-algolia-insights'];
-const { createQuerySuggestionsPlugin } = window['@algolia/autocomplete-plugin-query-suggestions'];
-const { createRedirectUrlPlugin } = window['@algolia/autocomplete-plugin-redirect-url'];
+import { autocomplete, getAlgoliaResults } from '@algolia/autocomplete-js';
+import { createAlgoliaInsightsPlugin } from '@algolia/autocomplete-plugin-algolia-insights';
+import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions';
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches';
+import { createRedirectUrlPlugin } from '@algolia/autocomplete-plugin-redirect-url';
+import '@algolia/autocomplete-theme-classic';
 
 // Get Algolia configured clients
-import { searchClient, insightsClient, searchConfig, pubsub } from "./algoliaConfig";
+import { searchClient, insightsClient, searchConfig, pubsub } from "./algoliaConfig.js";
 // Helper functions
-import { printFriendlyDollarCents, getCollection, updateUrlParameter, QUERY_UPDATE_EVT } from "./common";
+import { getCollection, updateUrlParameter, QUERY_UPDATE_EVT } from "./common.js";
 
 // Events Plugin
 const algoliaInsightsPlugin = createAlgoliaInsightsPlugin({ insightsClient });
@@ -82,7 +83,7 @@ export function itemTemplate(itemTemplateParams) {
   })}
           </div>
           <div class="aa-ItemContentDescription">
-            ${`$${printFriendlyDollarCents(item.price)}`}
+            ${`$${item.price}`}
           </div>
         </div>
       </div>
@@ -122,7 +123,6 @@ const autocompleteSubmitHandler = (state) => {
       window.location.assign(`${searchConfig.searchPagePath}`);
     }
   } else {
-    console.log('Sending evnt!!', state.query)
     pubsub.publish(QUERY_UPDATE_EVT, {
       query: state.query ? state.query : '',
       index: searchConfig.recordsIndex,
@@ -151,13 +151,12 @@ const autocompleteInstance = autocomplete({
     } else if (query && query != '' && nbHits == 0) {
       productsLabel = html`<span class="gutter"></span>No results found for <span class="highlighted-text"> "${query}"</span>, but take a look at our top sellers`;
     }
-    console.log('productsLabel', productsLabel, nbHits)
     const submitHandler = (evt) => {
       evt.preventDefault();
       if (state.query) {
-         window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
+        window.location.href = `${searchConfig.searchPagePath}?q=${state.query}`;
       } else {
-          window.location.href = `${searchConfig.searchPagePath}`;
+        window.location.href = `${searchConfig.searchPagePath}`;
       }
     }
     const leftColumnContent = (getCollection(state.collections, 'recentSearchesPlugin') && getCollection(state.collections, 'recentSearchesPlugin').items.length > 0) ||

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=development && parcel ./src/index.html --port 3001  --public-url=/ --host localhost",
+    "start": "NODE_ENV=development && npm run clean && parcel ./src/index.html ./src/search.html --port 3002",
     "build": "NODE_ENV=production && npm run clean && parcel build ./src/index.html ./src/search.html --no-source-maps",
     "clean": "rm -rf .parcel-cache && rm -rf dist"
   },
@@ -21,7 +21,8 @@
     "rules": {
       "index(.*).js": "algolia-search-bar.js",
       "search(.*).js": "algolia-search-results.js",
-      "index(.*).css":"algolia-styles.css"
+      "index(.*).css":"algolia-search-bar.css",
+      "search(.*).css":"algolia-search-results.css"
     }
   }
 }
