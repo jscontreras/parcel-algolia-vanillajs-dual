@@ -1,5 +1,5 @@
 import instantsearch from 'instantsearch.js';
-import { hits, index, configure, pagination, sortBy } from 'instantsearch.js/es/widgets';
+import { hits, index, configure, pagination, sortBy, currentRefinements } from 'instantsearch.js/es/widgets';
 import { getQueryParam, QUERY_UPDATE_EVT } from './common.js';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
 import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig.js";
@@ -9,8 +9,17 @@ import { dynamicFacetsWidget } from './instantSearchFacets.js';
 dynamicFacetsWidget
 // Main flag
 const store = {
-  hasResults: true
+  hasResults: true,
+  activeFacets: 0
 };
+
+/**
+ * Refreshes the filters button to reflect refinemnts.
+ */
+function refreshFiltersText() {
+  console.log('store.activeFacets', store.activeFacets)
+  document.querySelector('.filters-trigger__btn').innerHTML = store.activeFacets ? `Filters(${store.activeFacets})` : `+ Filters`;
+}
 
 // Read the query attribute if any
 const initialQuery = getQueryParam();
@@ -45,7 +54,7 @@ const myInstantSearchGlobalConfig = configure({
 });
 
 // Sort By Widget
-const mySortByWidget = sortBy({
+const sortByWidget = sortBy({
   container: '#sort-by__container',
   items: [
     { label: 'Featured', value: 'instant_search' },
@@ -131,7 +140,7 @@ const myPaginator = pagination({
 // Index for non-results pages rendering
 const nonResultsIndex = index({
   indexName: searchConfig.noResultsIndex,
-  indexId: `${searchConfig.noResultsIndex}--noREsults}`,
+  indexId: `${searchConfig.noResultsIndex}--nonResults}`,
 }).addWidgets([
   configure({
     query: '',
@@ -153,6 +162,29 @@ const nonResultsIndex = index({
   })]
 );
 
+const refinementsWidget = currentRefinements({
+  container: '#current-refinements',
+  transformItems:(items) => {
+    let refinementsCount = 0;
+    let updateRefinments = false;
+    // get search index refinments if any
+    items.forEach(item => {
+      if (item.indexId === searchConfig.recordsIndex ) {
+        refinementsCount++;
+        updateRefinments = true;
+        if (item.label.includes('hierarchicalCategories.')) {
+          item.label = 'Category';
+        }
+      }
+    })
+    if (updateRefinments) {
+      store.activeFacets = refinementsCount;
+      refreshFiltersText();
+    }
+    return items
+  }
+});
+
 
 // Array for InstantSearch widgets
 const widgets = [
@@ -162,7 +194,8 @@ const widgets = [
   myPaginator,
   nonResultsIndex,
   dynamicFacetsWidget,
-  mySortByWidget
+  sortByWidget,
+  refinementsWidget
 ]
 
 // Adding the widgets to the InstantSearch instance
@@ -172,3 +205,28 @@ myInstantSearch.use(insightsMiddleware);
 
 // Initialize InstantSearch
 myInstantSearch.start();
+
+
+// Add filters button listener
+refreshFiltersText();
+document.querySelector('.filters-trigger__btn').addEventListener('click',  () => {
+  document.querySelector('.ais__main-container').classList.toggle('ais__main-container--facets-mode');
+});
+
+// Add close button listener
+document.querySelector('.filters-close__btn').addEventListener('click', () => {
+  document.querySelector('.ais__main-container').classList.toggle('ais__main-container--facets-mode');
+});
+
+// Window resize listener
+window.addEventListener('resize', function () {
+  if (window.innerWidth < 681) {
+    // replace '.my-selector' with your CSS selector
+    var element = document.querySelector('.ais__main-container');
+    if (element) {
+      // replace 'my-class' with your class name
+      element.classList.remove('ais__main-container--facets-mode');
+    }
+  }
+});
+

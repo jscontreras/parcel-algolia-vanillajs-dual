@@ -30,13 +30,14 @@
     <!-- InstantSearch containers!! BEGIN-->
     <div class="ais__main-container">
       <div class="ais__main-container--header">
-        <button class="filters-trigger__btn">Filters</button>
+        <button class="filters-trigger__btn"><span class="flters-trigger__count"></span></button>
+        <button class="filters-close__btn">×</span></button>
         <div id="sort-by__container"></div>
       </div>
       <div class="ais__main-container--content">
         <div class="ais__main-container--left">
-          <div id="facets__container">
-          </div>
+          <div id="current-refinements"></div>
+          <div id="facets__container"></div>
         </div>
         <div class="ais__main-container--center">
           <div id="searchbox__container" class="pb-2"></div>

@@ -1,9 +1,5 @@
 import { dynamicWidgets, refinementList, hierarchicalMenu, panel, menu } from 'instantsearch.js/es/widgets';
 
-
-
-
-
 /**
  * Facets top dynamic widget
  */
@@ -41,5 +37,3 @@ export const dynamicFacetsWidget = dynamicWidgets({
     })(refinementList)({ container, attribute });
   }
 });
-
-
