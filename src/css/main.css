@@ -217,7 +217,7 @@ body {
 
 /* --- Content */
 .aa-Source[data-autocomplete-source-id='products'] .aa-ItemContent {
-  flex-direction: row;
+  flex-direction: column;
   height: 100%;
   display: flex;
   margin-left: 10px;

@@ -77,10 +77,10 @@ export function itemTemplate(itemTemplateParams) {
         </div>
         <div class="aa-ProductItemContentFooter">
           <div class="aa-ItemContentTitle">
-            ${components.Highlight({
-    hit: item,
-    attribute: 'title',
-  })}
+            ${components.Snippet({
+            hit: item,
+            attribute: 'name',
+          })}
           </div>
           <div class="aa-ItemContentDescription">
             ${`$${item.price}`}
@@ -202,7 +202,7 @@ const autocompleteInstance = autocomplete({
                 indexName: searchConfig.recordsIndex,
                 query,
                 params: {
-                  hitsPerPage: 4,
+                  hitsPerPage: 10,
                   attributesToSnippet: ['name:10', 'description:35'],
                   snippetEllipsisText: '…',
                   ruleContexts: searchConfig.autocompleteTags.recordsSearch,
