@@ -29,7 +29,7 @@ export const dynamicFacetsWidget = dynamicWidgets({
     return panel({
       templates: {
         header(options, { html }) {
-          if (options.results && !attribute.includes(".lvl")) {
+          if (options.items.length > 0 && !attribute.includes(".lvl")) {
             return html`<h3>${attribute}:</h3>`;
           }
         },
