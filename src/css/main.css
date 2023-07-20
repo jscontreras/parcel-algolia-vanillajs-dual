@@ -370,6 +370,10 @@ body {
   flex-wrap: wrap;
   flex-direction: column;
 
+  #hits-default__container {
+    max-width: 100vw;
+  }
+
   .ais__main-container--content {
     display: flex;
   }
@@ -390,8 +394,10 @@ body {
       margin-bottom: 20px;
     }
 
-    .current-refinements {
-      &--hidden {
+    #current-refinements {
+      margin-top: 20px;
+
+      .current-refinements--hidden {
         display: none;
       }
     }
@@ -419,6 +425,7 @@ body {
       border: 1px solid blue;
       color: blue;
       border-radius: 5px;
+      font-size: .85em;
     }
   }
 
@@ -498,6 +505,10 @@ body {
       margin-right: 1em;
       display: block;
       max-width: 300px;
+
+      #current-refinements {
+        margin-top: -43px;
+      }
     }
 
     #hits-default__container .ais-Hits-item.ais-Hits-item {
