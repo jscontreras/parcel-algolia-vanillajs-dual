@@ -5,9 +5,26 @@
   "scripts": {
     "start": "NODE_ENV=development && npm run clean && parcel ./src/index.html ./src/search.html --port 3002",
     "build": "NODE_ENV=production && npm run clean && parcel build ./src/index.html ./src/search.html --no-source-maps",
-    "clean": "rm -rf .parcel-cache && rm -rf dist"
+    "clean": "rm -rf .parcel-cache && rm -rf dist",
+    "watch": "nodemon --watch src --exec npm run build"
+  },
+  "dependencies": {
+    "@algolia/autocomplete-core": "^1.10.0",
+    "@algolia/autocomplete-js": "^1.10.0",
+    "@algolia/autocomplete-plugin-algolia-insights": "^1.10.0",
+    "@algolia/autocomplete-plugin-query-suggestions": "^1.10.0",
+    "@algolia/autocomplete-plugin-recent-searches": "^1.10.0",
+    "@algolia/autocomplete-plugin-redirect-url": "^1.10.0",
+    "@algolia/autocomplete-preset-algolia": "^1.10.0",
+    "@algolia/autocomplete-theme-classic": "^1.10.0",
+    "algoliasearch": "^4.18.0",
+    "instantsearch.css": "^8.0.0",
+    "instantsearch.js": "^4.56.5",
+    "PubSub": "^4.0.0",
+    "search-insights": "^2.7.0"
   },
   "devDependencies": {
+    "nodemon": "^3.0.1",
     "parcel": "^2.9.2",
     "parcel-namer-rewrite": "^2.0.0-rc.3",
     "parcel-plugin-x": "./local_modules/parcel-plugin-x",
@@ -15,14 +32,13 @@
     "postcss-nested": "^5.0.6",
     "tailwindcss": "^3.1.8"
   },
-  "dependencies": {},
   "parcel-namer-rewrite": {
     "hashing": "never",
     "rules": {
-      "index(.*).js": "algolia-search-bar.js",
-      "search(.*).js": "algolia-search-results.js",
-      "index(.*).css":"algolia-search-bar.css",
-      "search(.*).css":"algolia-search-results.css"
+      "index(.*).js": "example.com/algolia/js/algolia-search-bar.js",
+      "search(.*).js": "example.com/algolia/js/algolia-search-results.js",
+      "index(.*).css": "example.com/algolia/css/algolia-search-bar.css",
+      "search(.*).css": "example.com/algolia/css/algolia-search-results.css"
     }
   }
 }

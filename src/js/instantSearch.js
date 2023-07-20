@@ -4,7 +4,9 @@ import { getQueryParam, QUERY_UPDATE_EVT } from './common.js';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
 import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig.js";
 import "instantsearch.css/themes/satellite-min.css"
+import { dynamicFacetsWidget } from './instantSearchFacets.js';
 
+dynamicFacetsWidget
 // Main flag
 const store = {
   hasResults: true
@@ -145,7 +147,8 @@ const widgets = [
   customSearchBoxWidget,
   myHitsCustomTemplate,
   myPaginator,
-  nonResultsIndex
+  nonResultsIndex,
+  dynamicFacetsWidget
 ]
 
 // Adding the widgets to the InstantSearch instance
