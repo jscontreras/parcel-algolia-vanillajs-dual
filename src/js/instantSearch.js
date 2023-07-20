@@ -17,7 +17,6 @@ const store = {
  * Refreshes the filters button to reflect refinemnts.
  */
 function refreshFiltersText() {
-  console.log('store.activeFacets', store.activeFacets)
   document.querySelector('.filters-trigger__btn').innerHTML = store.activeFacets ? `Filters(${store.activeFacets})` : `+ Filters`;
   if (store.activeFacets === 0) {
     document.querySelector('#current-refinements').classList.add('current-refinements--hidden');
