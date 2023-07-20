@@ -1,5 +1,5 @@
 import instantsearch from 'instantsearch.js';
-import { hits, index, configure, pagination } from 'instantsearch.js/es/widgets';
+import { hits, index, configure, pagination, sortBy } from 'instantsearch.js/es/widgets';
 import { getQueryParam, QUERY_UPDATE_EVT } from './common.js';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
 import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig.js";
@@ -44,6 +44,16 @@ const myInstantSearchGlobalConfig = configure({
   analyticsTags: searchConfig.instantSearchTags.recordsSearch,
 });
 
+// Sort By Widget
+const mySortByWidget = sortBy({
+  container: '#sort-by__container',
+  items: [
+    { label: 'Featured', value: 'instant_search' },
+    { label: 'Price (asc)', value: 'instant_search_price_asc' },
+    { label: 'Price (desc)', value: 'instant_search_price_desc' },
+  ],
+})
+
 // Add custom SearchBox render that listens to Autocomplete but doesn't render anything
 const renderSearchBox = ({ refine, instantSearchInstance }, isFirstRender) => {
   // Rendering logic for listening from Autocomplete events.
@@ -82,7 +92,10 @@ function itemTemplate(hit, { html, components, sendEvent }) {
     }}" class="text-blue-400">
         ${components.Highlight({ attribute: 'name', hit })}
       </a>
-      <img src="${hit.image}"/>
+      <div className="ais-image__container">
+            <img src="${hit.image}"/>
+      </div>
+      <p>${hit.price}</p>
       <p>${components.Snippet({ attribute: 'description', hit })}</p>
       <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded absolute bottom-5" onClick="${evt => {
       evt.preventDefault();
@@ -148,7 +161,8 @@ const widgets = [
   myHitsCustomTemplate,
   myPaginator,
   nonResultsIndex,
-  dynamicFacetsWidget
+  dynamicFacetsWidget,
+  mySortByWidget
 ]
 
 // Adding the widgets to the InstantSearch instance

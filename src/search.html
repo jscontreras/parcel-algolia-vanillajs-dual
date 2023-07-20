@@ -29,16 +29,23 @@
     <div id="autocomplete__container"></div>
     <!-- InstantSearch containers!! BEGIN-->
     <div class="ais__main-container">
-      <div class="ais__main-container--left">
-        <div id="facets__container">
+      <div class="ais__main-container--header">
+        <button class="filters-trigger__btn">Filters</button>
+        <div id="sort-by__container"></div>
+      </div>
+      <div class="ais__main-container--content">
+        <div class="ais__main-container--left">
+          <div id="facets__container">
+          </div>
+        </div>
+        <div class="ais__main-container--center">
+          <div id="searchbox__container" class="pb-2"></div>
+          <div id="hits-default__container"></div>
+          <div id="hits-non-results__container"></div>
+          <div id="pagination" class="p-8 text-center"></div>
         </div>
       </div>
-      <div class="ais__main-container--center">
-        <div id="searchbox__container" class="pb-2"></div>
-        <div id="hits-default__container"></div>
-        <div id="hits-non-results__container"></div>
-        <div id="pagination" class="p-8 text-center"></div>
-      </div>
+
     </div>
     <!-- InstantSearch containers!! END -->
   </div>
