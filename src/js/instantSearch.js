@@ -1,5 +1,5 @@
 import instantsearch from 'instantsearch.js';
-import { hits, index, configure, pagination, sortBy, currentRefinements } from 'instantsearch.js/es/widgets';
+import { hits, index, configure, pagination, sortBy, currentRefinements, panel } from 'instantsearch.js/es/widgets';
 import { getQueryParam, QUERY_UPDATE_EVT } from './common.js';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
 import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig.js";
@@ -19,6 +19,11 @@ const store = {
 function refreshFiltersText() {
   console.log('store.activeFacets', store.activeFacets)
   document.querySelector('.filters-trigger__btn').innerHTML = store.activeFacets ? `Filters(${store.activeFacets})` : `+ Filters`;
+  if (store.activeFacets === 0) {
+    document.querySelector('#current-refinements').classList.add('current-refinements--hidden');
+  } else {
+    document.querySelector('#current-refinements').classList.remove('current-refinements--hidden');
+  }
 }
 
 // Read the query attribute if any
@@ -162,14 +167,26 @@ const nonResultsIndex = index({
   })]
 );
 
-const refinementsWidget = currentRefinements({
+/**
+ * Current refinements Widget
+ */
+const refinementsWidget = panel({
   container: '#current-refinements',
-  transformItems:(items) => {
+  templates: {
+    header(options, { html }) {
+      if (options.items.length) {
+        return html`<h3>Current Refinements:</h3>`;
+      }
+    },
+  }
+})(currentRefinements)({
+  container: '#current-refinements',
+  transformItems: (items) => {
     let refinementsCount = 0;
     let updateRefinments = false;
     // get search index refinments if any
     items.forEach(item => {
-      if (item.indexId === searchConfig.recordsIndex ) {
+      if (item.indexId === searchConfig.recordsIndex) {
         refinementsCount++;
         updateRefinments = true;
         if (item.label.includes('hierarchicalCategories.')) {

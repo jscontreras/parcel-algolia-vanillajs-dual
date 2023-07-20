@@ -383,8 +383,18 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 20px;
+    padding: 0 20px;
     display: none;
+
+    .ais-Panel-body {
+      margin-bottom: 20px;
+    }
+
+    .current-refinements {
+      &--hidden {
+        display: none;
+      }
+    }
   }
 
   &--center {
@@ -424,8 +434,10 @@ body {
     display: flex;
   }
 
-  #facets__container {
-    margin-top: 30px;
+  #current-refinements {
+    .ais-Panel {
+      margin: 0;
+    }
   }
 
   &--facets-mode {
@@ -445,6 +457,7 @@ body {
         right: 10px;
         top: 0;
       }
+
     }
   }
 
@@ -484,6 +497,7 @@ body {
       position: relative;
       margin-right: 1em;
       display: block;
+      max-width: 300px;
     }
 
     #hits-default__container .ais-Hits-item.ais-Hits-item {
