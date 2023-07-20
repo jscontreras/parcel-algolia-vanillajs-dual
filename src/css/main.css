@@ -392,6 +392,9 @@ body {
       margin-right: 1em;
       display: block;
     }
+    #hits-default__container .ais-Hits-item.ais-Hits-item {
+      max-width: calc(100vw - 400px);
+    }
   }
 
   /* Panel section */
