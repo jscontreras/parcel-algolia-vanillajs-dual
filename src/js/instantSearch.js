@@ -6,7 +6,6 @@ import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoli
 import "instantsearch.css/themes/satellite-min.css"
 import { dynamicFacetsWidget } from './instantSearchFacets.js';
 
-dynamicFacetsWidget
 // Main flag
 const store = {
   hasResults: true,
@@ -139,6 +138,7 @@ const myHitsCustomTemplate = hits({
 
 const myPaginator = pagination({
   container: '#pagination',
+  totalPages: 2
 })
 
 // Index for non-results pages rendering
@@ -225,24 +225,37 @@ myInstantSearch.start();
 
 // Add filters button listener
 refreshFiltersText();
-document.querySelector('.filters-trigger__btn').addEventListener('click',  () => {
-  document.querySelector('.ais__main-container').classList.toggle('ais__main-container--facets-mode');
+document.querySelector('.filters-trigger__btn').addEventListener('click', () => {
+  enableFacetsMobileStyles();
 });
 
 // Add close button listener
 document.querySelector('.filters-close__btn').addEventListener('click', () => {
-  document.querySelector('.ais__main-container').classList.toggle('ais__main-container--facets-mode');
+  disableFacetsMobileStyles();
 });
 
 // Window resize listener
 window.addEventListener('resize', function () {
   if (window.innerWidth < 681) {
-    // replace '.my-selector' with your CSS selector
-    var element = document.querySelector('.ais__main-container');
-    if (element) {
-      // replace 'my-class' with your class name
-      element.classList.remove('ais__main-container--facets-mode');
-    }
+    disableFacetsMobileStyles();
   }
 });
 
+/**
+ * Disables all the html done.
+ */
+function disableFacetsMobileStyles() {
+  // replace '.my-selector' with your CSS selector
+  var element = document.querySelector('.ais__main-container');
+  if (element) {
+    element.classList.remove('ais__main-container--facets-mode');
+  }
+  document.body.classList.remove('ais_mobile_facets--enabled');
+}
+/**
+ * Add the corresponding CSS classes for CSS styles
+ */
+function enableFacetsMobileStyles() {
+  document.body.classList.add('ais_mobile_facets--enabled');
+  document.querySelector('.ais__main-container').classList.add('ais__main-container--facets-mode');
+}
