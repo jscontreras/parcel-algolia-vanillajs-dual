@@ -259,3 +259,4 @@ function enableFacetsMobileStyles() {
   document.body.classList.add('ais_mobile_facets--enabled');
   document.querySelector('.ais__main-container').classList.add('ais__main-container--facets-mode');
 }
+//ss

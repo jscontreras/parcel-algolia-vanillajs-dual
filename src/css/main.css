@@ -547,19 +547,23 @@ li.ais-Pagination-item--page {
 
   .aa-Products {
     width: auto;
+    max-width: calc(100vw - 240px);
   }
 
-  .aa-Source[data-autocomplete-source-id='products'] .aa-List {
-    display: flex;
-    flex-wrap: nowrap;
+  .aa-Source[data-autocomplete-source-id='products'] {
     overflow-x: scroll;
-  }
+    .aa-List {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: scroll;
+    }
 
-  .aa-Source[data-autocomplete-source-id='products'] .aa-Item {
-    width: calc(43% - var(--aa-spacing-half) / 2);
-    flex-basis: 200px;
-    flex-shrink: 0;
-    flex-grow: 0;
+    .aa-Item {
+      width: calc(43% - var(--aa-spacing-half) / 2);
+      flex-basis: 200px;
+      flex-shrink: 0;
+      flex-grow: 0;
+    }
   }
 
   /* Styles for Mobile search box */
