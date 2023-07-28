@@ -6,8 +6,8 @@ import PubSub from 'PubSub';
 
 const environment = process.env.NODE_ENV || false;
 // Algolia Credentials
-const appId = 'latency';
-const apiKey = '6be0576ff61c053d5f9a3225e2a90f76';
+const appId = 'SGF0RZXAXL';
+const apiKey = '92a97e0f8732e61569c6aa4c2b383308';
 
 // Initializing Search Client
 const clientBase = algoliasearch(appId, apiKey);
@@ -38,8 +38,8 @@ export const searchConfig = preProcessConfig({
     nonResults: ['autocomplete-non-results'],
   },
   instantSearchTags: {
-    recordsSearch: ['ais-results-page'],
-    nonResults: ['ais-non-results-page'],
+    recordsSearch: ['ais-results-page', 'test-facets-sort'],
+    nonResults: ['ais-non-results-page', 'test-facets-sort'],
   },
 });
 
