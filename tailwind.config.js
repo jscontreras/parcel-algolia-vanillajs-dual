@@ -8,6 +8,7 @@ module.exports = {
   },
   plugins: [],
   safelist: [
-    'text-blue-400'
+    'text-blue-400',
+    'bg-light-blue-500'
   ]
 }

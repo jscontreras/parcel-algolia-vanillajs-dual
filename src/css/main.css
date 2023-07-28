@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg-light-blue-500 {
+  background-color: #03a9f4;
+}
+
 .widget__container {
   border: dotted orange;
   padding: 2px;
@@ -493,6 +497,10 @@ li.ais-Pagination-item--page {
 
   li.ais-Pagination-item--page {
     display: inline-block;
+  }
+
+  #hits-default__container .ais-Hits-item {
+    max-width: 250px;
   }
 
   /* Main Layout */

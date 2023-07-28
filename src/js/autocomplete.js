@@ -67,13 +67,13 @@ export function itemTemplate(itemTemplateParams) {
     <div class="aa-ItemContent" onClick="${handleItemNavigation}">
       <div class="aa-ItemContentImage">
         <img
-          src="${item.image}"
+          src="${item.image_urls[0]}"
           alt="${item.name}"
         />
       </div>
       <div class="aa-ItemContentBody">
         <div class="aa-ItemContentDescription">
-          ${item.product_type}
+          ${item.brand}
         </div>
         <div class="aa-ProductItemContentFooter">
           <div class="aa-ItemContentTitle">
@@ -83,7 +83,7 @@ export function itemTemplate(itemTemplateParams) {
           })}
           </div>
           <div class="aa-ItemContentDescription">
-            ${`$${item.price}`}
+            ${`$${item.price.value}`}
           </div>
         </div>
       </div>

@@ -28,9 +28,13 @@ export const insightsMiddleware = createInsightsMiddleware({ insightsClient: aa 
 export const searchConfig = preProcessConfig({
   catalogId: "products",
   catalogLabel: "All Products",
-  recordsIndex: "instant_search",
-  noResultsIndex: "instant_search",
-  suggestionsIndex: "instant_search_demo_query_suggestions",
+  recordsIndex: "prod_ECOM",
+  noResultsIndex: "prod_ECOM",
+  suggestionsIndex: "prod_ECOM_query_suggestions",
+  extraSortByIndices: [
+    { label: 'Price (asc)', value: 'prod_ECOM_price_asc' },
+    { label: 'Price (desc)', value: 'prod_ECOM_price_desc' }
+  ],
   // The URL used for the search results page.
   searchPagePath: "/search",
   autocompleteTags: {
@@ -41,6 +45,13 @@ export const searchConfig = preProcessConfig({
     recordsSearch: ['ais-results-page', 'test-facets-sort'],
     nonResults: ['ais-non-results-page', 'test-facets-sort'],
   },
+  attributeLabels: {
+    'price.value': 'Price',
+    'hierarchical_categories': "Catalog Categories",
+    'color.original_name': 'Colors',
+    'price.on_sales': 'Promos',
+    'reviews.rating': 'Avg. Customer Review'
+  }
 });
 
 // Export channel subscription
@@ -73,6 +84,25 @@ function clientProxy(clientBase) {
 }
 
 /**
+ * Configure overrides.
+ * Used in this case to inject catalog page filter
+ */
+export function overrideConfig(initialConfig) {
+  console.log(window.location.pathname)
+  const currentPath = window.location.pathname;
+  // Detecting Catalog Page
+  if (currentPath.startsWith('/catalog/')) {
+    // Simple parser for example purposes
+    const pathSections = currentPath.split('/')
+    const category = (pathSections[2].charAt(0).toUpperCase() + pathSections[2].slice(1)).split('.')[0];
+
+    initialConfig['filters'] = initialConfig.filters ? `${initialConfig.filters} AND category_page_id:'${category}'` : `category_page_id:'${category}'`;
+    console.log('initalConfig.filters', initialConfig.filters)
+  }
+  return initialConfig;
+}
+
+/**
  * Controls configuration for local development ease
  * @param {} config
  */
@@ -84,4 +114,16 @@ function preProcessConfig(config) {
     }
   }
   return config;
+}
+
+/**
+ * Returns friendly name if available in the config
+ * @param {} attribute
+ * @returns
+ */
+export function friendlyAttributeName(attribute) {
+  if (searchConfig.attributeLabels[attribute]) {
+    return searchConfig.attributeLabels[attribute];
+  }
+  return attribute;
 }

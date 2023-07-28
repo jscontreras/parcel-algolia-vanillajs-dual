@@ -2,7 +2,7 @@ import instantsearch from 'instantsearch.js';
 import { hits, index, configure, pagination, sortBy, currentRefinements, panel } from 'instantsearch.js/es/widgets';
 import { getQueryParam, QUERY_UPDATE_EVT } from './common.js';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { searchClient, insightsMiddleware, searchConfig, pubsub } from "./algoliaConfig.js";
+import { searchClient, insightsMiddleware, searchConfig, pubsub, overrideConfig } from "./algoliaConfig.js";
 import "instantsearch.css/themes/satellite-min.css"
 import { dynamicFacetsWidget } from './instantSearchFacets.js';
 
@@ -48,22 +48,21 @@ const myInstantSearch = instantsearch({
 /**
  * INSTANT SEARCH WIDGETS
  */
-
 // Instant Search Global Configuration Widget
-const myInstantSearchGlobalConfig = configure({
+const myInstantSearchGlobalConfig = configure(overrideConfig({
   hitsPerPage: 24,
   ruleContexts: searchConfig.instantSearchTags.recordsSearch,
   analyticsTags: searchConfig.instantSearchTags.recordsSearch,
-});
+}));
 
 // Sort By Widget
 const sortByWidget = sortBy({
   container: '#sort-by__container',
   items: [
     { label: 'Featured', value: searchConfig.recordsIndex },
-    { label: 'Price (asc)', value: 'instant_search_price_asc' },
-    { label: 'Price (desc)', value: 'instant_search_price_desc' },
+    ...searchConfig.extraSortByIndices
   ],
+
 })
 
 // Add custom SearchBox render that listens to Autocomplete but doesn't render anything
@@ -105,9 +104,9 @@ function itemTemplate(hit, { html, components, sendEvent }) {
         ${components.Highlight({ attribute: 'name', hit })}
       </a>
       <div className="ais-image__container">
-            <img src="${hit.image}"/>
+            <img src="${hit.image_urls[0]}"/>
       </div>
-      <p>${hit.price}</p>
+      <p>${hit.price.value}</p>
       <p>${components.Snippet({ attribute: 'description', hit })}</p>
       <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded absolute bottom-5" onClick="${evt => {
       evt.preventDefault();
@@ -188,7 +187,7 @@ const refinementsWidget = panel({
       if (item.indexId === searchConfig.recordsIndex) {
         refinementsCount++;
         updateRefinments = true;
-        if (item.label.includes('hierarchicalCategories.')) {
+        if (item.label.includes('hierarchical_categories.')) {
           item.label = 'Category';
         }
       }

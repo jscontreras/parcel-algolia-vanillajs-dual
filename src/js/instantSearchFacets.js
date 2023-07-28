@@ -1,4 +1,5 @@
-import { dynamicWidgets, refinementList, hierarchicalMenu, panel, menu } from 'instantsearch.js/es/widgets';
+import { dynamicWidgets, refinementList, hierarchicalMenu, panel, rangeSlider, ratingMenu, toggleRefinement} from 'instantsearch.js/es/widgets';
+import { friendlyAttributeName } from './algoliaConfig';
 
 /**
  * Facets top dynamic widget
@@ -9,28 +10,68 @@ export const dynamicFacetsWidget = dynamicWidgets({
   facets: ['*'],
   widgets: [
     container => {
+      const attribute = 'hierarchical_categories';
       const attributes = [
-        'hierarchicalCategories.lvl0',
-        'hierarchicalCategories.lvl1',
-        'hierarchicalCategories.lvl2',
+        'hierarchical_categories.lvl0',
+        'hierarchical_categories.lvl1',
+        'hierarchical_categories.lvl2',
       ];
       return panel({
         templates: {
           header(options, { html }) {
             if (options.results) {
-              return html`<h3>Categories Hierarchy:</h3>`;
+              return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
             }
           },
         }
-      })(hierarchicalMenu)({ container, attributes });
+      })(hierarchicalMenu)({ container, attributes, escapeFacetValues:false });
     },
+    container => {
+      const attribute = 'price.value';
+      return panel({
+        templates: {
+          header(options, { html }) {
+            if (options.results) {
+              return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
+            }
+          },
+        }
+      })(rangeSlider)({ container, attribute });
+    },
+    container => {
+      const attribute = 'reviews.rating';
+      return panel({
+        templates: {
+          header(options, { html }) {
+            if (options.results) {
+              return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
+            }
+          },
+        }
+      })(ratingMenu)({ container, attribute });
+    },
+    container => {
+      const attribute = 'price.on_sales';
+      return panel({
+        templates: {
+          header(options, { html }) {
+            if (options.results) {
+              return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
+            }
+          },
+        }
+      })(toggleRefinement)({
+        container, attribute, templates: {
+          labelText: friendlyAttributeName(attribute), // Text to display next to the toggle
+        }, });
+    }
   ],
   fallbackWidget: ({ container, attribute }) => {
     return panel({
       templates: {
         header(options, { html }) {
           if (options.items.length > 0 && !attribute.includes(".lvl")) {
-            return html`<h3>${attribute}:</h3>`;
+            return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
           }
         },
       }
