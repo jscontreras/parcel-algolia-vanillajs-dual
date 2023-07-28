@@ -47,7 +47,7 @@ export const searchConfig = preProcessConfig({
   },
   attributeLabels: {
     'price.value': 'Price',
-    'hierarchical_categories': "Catalog Categories",
+    'hierarchical_categories': "Catalog",
     'color.original_name': 'Colors',
     'price.on_sales': 'Promos',
     'reviews.rating': 'Avg. Customer Review'
@@ -124,6 +124,9 @@ function preProcessConfig(config) {
 export function friendlyAttributeName(attribute) {
   if (searchConfig.attributeLabels[attribute]) {
     return searchConfig.attributeLabels[attribute];
+  } else if(attribute.includes('.lvl')) {
+    const hierarchicalAttribute =  attribute.split('.lvl')[0];
+    return friendlyAttributeName(hierarchicalAttribute);
   }
   return attribute;
 }
