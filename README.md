@@ -43,15 +43,31 @@ Make sure you upload all the files in your web platform so they can be located u
 ### 3. Add the search results section.
 - a) Within your platform, locate the Results Page section that renders the results and include the following markup.
   ```html
-       <link rel="stylesheet" href="{ALGOLIA_ASSETS_URL}/algolia-search-results.css">
+    <link rel="stylesheet" href="{ALGOLIA_ASSETS_URL}/algolia-search-results.css">
 
-       <!-- InstantSearch containers!! -->
-      <div id="searchbox__container"></div>
-      <div id="hits-default__container"></div>
-      <div id="hits-non-results__container"></div>
-      <div id="pagination"></div>
+    <!-- InstantSearch containers!! BEGINNING-->
+    <div class="ais__main-container">
+      <div class="ais__main-container--header">
+        <button class="filters-trigger__btn"><span class="flters-trigger__count"></span></button>
+        <button class="filters-close__btn">×</span></button>
+        <div id="sort-by__container"></div>
+      </div>
+      <div class="ais__main-container--content">
+        <div class="ais__main-container--left">
+          <div id="current-refinements"></div>
+          <div id="facets__container"></div>
+        </div>
+        <div class="ais__main-container--center">
+          <div id="searchbox__container" class="pb-2"></div>
+          <div id="hits-default__container"></div>
+          <div id="hits-non-results__container"></div>
+          <div id="pagination" class="p-8 text-center"></div>
+        </div>
+      </div>
+    </div>
+    <!-- InstantSearch containers!! END -->
 
-      <script src="{ALGOLIA_ASSETS_URL}/algolia-search-results.js" type="module"></script>
+    <script src="{ALGOLIA_ASSETS_URL}/algolia-search-results.js" type="module"></script>
   ```
   > If you can, place the `<script>` and `<link`> tag in the dedicated sections for scripts and styles of the search page (We added all at the same place for simplicity).
 
