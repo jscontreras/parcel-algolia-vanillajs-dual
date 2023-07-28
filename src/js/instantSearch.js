@@ -125,6 +125,8 @@ const myHitsCustomTemplate = hits({
   container: '#hits-default__container',
   transformItems(hits) {
     store.hasResults = hits.length > 0;
+    // Hide/show based on results
+    !store.hasResults ? document.querySelector('#facets__container').classList.add('hidden') : document.querySelector('#facets__container').classList.remove('hidden');
     return hits;
   },
   templates: {
