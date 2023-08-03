@@ -1,4 +1,4 @@
-# Algolia VanillaJS Starter
+# Algolia VanillaJS Demo
 ## Installation
 Use the recommended node version (`.nvmrc`). If you have `nvm` then run `nvm use` to load the corresponding node version automatically.
 
