@@ -29,7 +29,7 @@ export const searchConfig = preProcessConfig({
   catalogId: "products",
   catalogLabel: "All Products",
   recordsIndex: "prod_ECOM",
-  noResultsIndex: "prod_ECOM",
+  noResultsIndex: "prod_ECOM_non_results",
   suggestionsIndex: "prod_ECOM_query_suggestions",
   extraSortByIndices: [
     { label: 'Price (asc)', value: 'prod_ECOM_price_asc' },
