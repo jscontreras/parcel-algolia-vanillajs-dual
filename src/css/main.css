@@ -526,7 +526,7 @@ li.ais-Pagination-item--page {
       margin-right: 1em;
       display: block;
       max-width: 300px;
-      margin-top: -55px;
+      /* margin-top: -55px; */
     }
 
     &--center {
