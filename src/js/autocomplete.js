@@ -91,20 +91,6 @@ export function itemTemplate(itemTemplateParams) {
   </div>`
 }
 
-// No results template
-export function noResultsTemplate({ state, html, components }) {
-  const { context } = state;
-  const { noResultsHits, query } = context;
-
-  return html`
-      <ul class="aa-List" role="listbox" aria-labelledby="autocomplete-4-1-label" id="autocomplete-4-1-list">
-      ${noResultsHits.map(item => (html`
-          <li class="aa-Item" id="autocomplete-4-1-item-1" role="option" aria-selected="false">
-            ${itemTemplate({ item, components, html, state })}
-          </li >`))}
-      </ul>`
-}
-
 /**
  * Main Submit Handler
  * @param {} state
@@ -144,8 +130,9 @@ const autocompleteInstance = autocomplete({
   render(params, root) {
     const { elements, render, html, state } = params;
     const { hitsPerPage, nbHits, query } = state.context;
-    const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks } = elements;
+    const { recentSearchesPlugin, querySuggestionsPlugin, products, staticLinks, nonResults } = elements;
     let productsLabel = 'Most Popular'
+    console.log('products', nbHits)
     if (query && query != '' && nbHits > 0) {
       productsLabel = `${hitsPerPage} out of ${nbHits} results for "${query}"`;
     } else if (query && query != '' && nbHits == 0) {
@@ -177,6 +164,7 @@ const autocompleteInstance = autocomplete({
                 <div class="aa-PanelSection--right aa-Products">
                  <h2>${productsLabel} <span class="aa-SubmitSearch--link" onClick="${submitHandler}">See All</span></h2>
                   ${products}
+                  ${nbHits == 0 && nonResults}
                   ${staticLinks}
                 </div>
               </div >
@@ -209,6 +197,38 @@ const autocompleteInstance = autocomplete({
                   analyticsTags: searchConfig.autocompleteTags.recordsSearch,
                 },
               },
+            ],
+            getItemUrl({ item }) {
+              return item.url
+            },
+            transformResponse(response) {
+              const { hits, results } = response;
+              setContext({
+                sourceId: 'products',
+                query,
+                hits,
+                nbHits: results[0].nbHits,
+                hitsPerPage: results[0].hitsPerPage
+              })
+              return hits[0].map(hit => {
+                return { ...hit }
+              });
+            },
+          });
+        },
+        templates: {
+          item: itemTemplate,
+        }
+      },
+      {
+        sourceId: 'nonResults',
+        classNames: {
+          source: "aa-results-tile"
+        },
+        getItems() {
+          return getAlgoliaResults({
+            searchClient,
+            queries: [
               {
                 // Making a second query for Non-Results-pages
                 indexName: searchConfig.noResultsIndex,
@@ -225,26 +245,10 @@ const autocompleteInstance = autocomplete({
             getItemUrl({ item }) {
               return item.url
             },
-            transformResponse(response) {
-              const { hits, results } = response;
-              setContext({
-                sourceId: 'products',
-                navigator: autocompleteInstance.navigator,
-                noResultsHits: hits[1],
-                query,
-                hits,
-                nbHits: results[0].nbHits,
-                hitsPerPage: results[0].hitsPerPage
-              })
-              return hits[0].map(hit => {
-                return { ...hit }
-              });
-            },
           });
         },
         templates: {
           item: itemTemplate,
-          noResults: noResultsTemplate
         }
       },
       {

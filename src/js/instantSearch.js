@@ -53,6 +53,8 @@ const myInstantSearchGlobalConfig = configure(overrideConfig({
   hitsPerPage: 24,
   ruleContexts: searchConfig.instantSearchTags.recordsSearch,
   analyticsTags: searchConfig.instantSearchTags.recordsSearch,
+  "filters": `region:${region_value}`
+
 }));
 
 // Sort By Widget
@@ -99,6 +101,8 @@ function itemTemplate(hit, { html, components, sendEvent }) {
       <a href="#" onClick="${evt => {
       evt.preventDefault();
       sendEvent('click', hit, 'Result Clicked');
+      // store query ID in localStorage
+      // aa('conversionAfterSearch)
       window.location.href = hit.url;
     }}" class="text-blue-400">
         ${components.Highlight({ attribute: 'name', hit })}
@@ -151,6 +155,7 @@ const nonResultsIndex = index({
     query: '',
     ruleContexts: searchConfig.instantSearchTags.nonResults,
     analyticsTags: searchConfig.instantSearchTags.nonResults,
+    clickAnalytics: true
   }),
   virtualSearchBox({}),
   hits({
