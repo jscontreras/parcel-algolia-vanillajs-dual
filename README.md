@@ -1,4 +1,4 @@
-# Algolia VanillaJS Starter
+# Algolia VanillaJS Demo
 ## Installation
 Use the recommended node version (`.nvmrc`). If you have `nvm` then run `nvm use` to load the corresponding node version automatically.
 
@@ -71,3 +71,5 @@ Make sure you upload all the files in your web platform so they can be located u
   ```
   > If you can, place the `<script>` and `<link`> tag in the dedicated sections for scripts and styles of the search page (We added all at the same place for simplicity).
 
+# Disclaimer
+The code in this repository is provided as-is and is not production-ready. It is intended to be used as a reference only and may contain bugs or other issues. The repository owner is not responsible for any damages or losses that may occur from the use of this code. Use at your own risk.
