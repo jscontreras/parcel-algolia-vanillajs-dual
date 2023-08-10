@@ -53,8 +53,6 @@ const myInstantSearchGlobalConfig = configure(overrideConfig({
   hitsPerPage: 24,
   ruleContexts: searchConfig.instantSearchTags.recordsSearch,
   analyticsTags: searchConfig.instantSearchTags.recordsSearch,
-  "filters": `region:${region_value}`
-
 }));
 
 // Sort By Widget

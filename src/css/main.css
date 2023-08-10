@@ -45,6 +45,7 @@
   flex-grow: 50;
   flex-shrink: 0;
   position: relative;
+  max-width: 250px;
 }
 
 .ais-Hits-list {
