@@ -2,7 +2,7 @@ import instantsearch from 'instantsearch.js';
 import { hits, index, configure, pagination, sortBy, currentRefinements, panel } from 'instantsearch.js/es/widgets';
 import { getQueryParam, QUERY_UPDATE_EVT } from './common.js';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { searchClient, insightsMiddleware, searchConfig, pubsub, overrideConfig } from "./algoliaConfig.js";
+import { searchClient, insightsMiddleware, searchConfig, pubsub, overrideConfig, friendlyAttributeName } from "./algoliaConfig.js";
 import "instantsearch.css/themes/satellite-min.css"
 import { dynamicFacetsWidget } from './instantSearchFacets.js';
 
@@ -125,6 +125,8 @@ const myHitsCustomTemplate = hits({
   container: '#hits-default__container',
   transformItems(hits) {
     store.hasResults = hits.length > 0;
+    // Hide/show based on results
+    !store.hasResults ? document.querySelector('#facets__container').classList.add('hidden') : document.querySelector('#facets__container').classList.remove('hidden');
     return hits;
   },
   templates: {
@@ -187,9 +189,7 @@ const refinementsWidget = panel({
       if (item.indexId === searchConfig.recordsIndex) {
         refinementsCount++;
         updateRefinments = true;
-        if (item.label.includes('hierarchical_categories.')) {
-          item.label = 'Category';
-        }
+        item.label = friendlyAttributeName(item.label);
       }
     })
     if (updateRefinments) {
