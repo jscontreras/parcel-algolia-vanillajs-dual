@@ -31,7 +31,6 @@ export const dynamicFacetsWidget = dynamicWidgets({
       return panel({
         templates: {
           header(options, { html }) {
-            console.log('options', options)
             if (options.results && options.results.hits.length > 0) {
               return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
             }
