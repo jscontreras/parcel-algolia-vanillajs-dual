@@ -14,7 +14,7 @@ const clientBase = algoliasearch(appId, apiKey);
 export const searchClient = { ...clientBase, ...clientProxy(clientBase) };
 
 // Insights Analytics Client Initialization
-aa("init", { appId, apiKey, useCookie: true });
+  aa("init", { appId, apiKey, useCookie: true });
 // Set token for both Authenticated or unauthenticated users.
 // aa('setUserToken', 'ma-user-999');
 
@@ -51,7 +51,9 @@ export const searchConfig = preProcessConfig({
     'color.original_name': 'Colors',
     'price.on_sales': 'Promos',
     'reviews.rating': 'Avg. Customer Review'
-  }
+  },
+  // Set the minimum characaters for autocomplete
+  minWordsAutocomplete: 0,
 });
 
 // Export channel subscription
@@ -66,6 +68,26 @@ export const pubsub = new PubSub();
 function clientProxy(clientBase) {
   return {
     search(requests) {
+      const cancelRequest = requests.find((request, i) => {
+        if (request.params && request.params.analyticsTags) {
+          if (request.params.analyticsTags.includes('cancel-query')) {
+            return true;
+          }
+        }
+        return false;
+      });
+      // If at least one of the multiqueries is cancelled
+      if (cancelRequest) {
+        const results = requests.map(() => {
+          return {
+            hits: []
+          }
+        });
+        return new Promise(resolve => {
+          resolve({ results });
+        });
+      }
+
       const refinedRequests = requests.map(request => {
         // Get the non-results query from instant search and remove the instantSearch inherited tags
         if (request.indexName == searchConfig.noResultsIndex && request.params && request.params.ruleContexts) {
@@ -116,6 +138,16 @@ function preProcessConfig(config) {
   return config;
 }
 
+// Stores the query info for after search events
+export function storeInfoForAfterEvents(object) {
+  localStorage.setItem('lastAlgoliaQueyInfo', JSON.stringify(object));
+}
+
+
+// Stores the query info for after search events
+export function getInfoForAfterEvents() {
+  return JSON.parse(localStorage.getItem('lastAlgoliaQueyInfo'));
+}
 /**
  * Returns friendly name if available in the config
  * @param {} attribute
@@ -124,8 +156,8 @@ function preProcessConfig(config) {
 export function friendlyAttributeName(attribute) {
   if (searchConfig.attributeLabels[attribute]) {
     return searchConfig.attributeLabels[attribute];
-  } else if(attribute.includes('.lvl')) {
-    const hierarchicalAttribute =  attribute.split('.lvl')[0];
+  } else if (attribute.includes('.lvl')) {
+    const hierarchicalAttribute = attribute.split('.lvl')[0];
     return friendlyAttributeName(hierarchicalAttribute);
   }
   return attribute;

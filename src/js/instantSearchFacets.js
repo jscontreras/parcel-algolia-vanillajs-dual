@@ -19,7 +19,7 @@ export const dynamicFacetsWidget = dynamicWidgets({
       return panel({
         templates: {
           header(options, { html }) {
-            if (options.results) {
+            if (options.results && options.results.hits.length > 0) {
               return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
             }
           },
@@ -31,7 +31,8 @@ export const dynamicFacetsWidget = dynamicWidgets({
       return panel({
         templates: {
           header(options, { html }) {
-            if (options.results) {
+            console.log('options', options)
+            if (options.results && options.results.hits.length > 0) {
               return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
             }
           },
@@ -43,7 +44,7 @@ export const dynamicFacetsWidget = dynamicWidgets({
       return panel({
         templates: {
           header(options, { html }) {
-            if (options.results) {
+            if (options.results && options.results.hits.length > 0) {
               return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
             }
           },
@@ -55,7 +56,7 @@ export const dynamicFacetsWidget = dynamicWidgets({
       return panel({
         templates: {
           header(options, { html }) {
-            if (options.results) {
+            if (options.results && options.results.hits.length > 0) {
               return html`<h3>${friendlyAttributeName(attribute)}:</h3>`;
             }
           },

@@ -49,3 +49,21 @@ export function updateUrlParameter(key, value) {
   // Replace the current URL with the new URL
   window.history.replaceState({ path: newUrl }, '', newUrl);
 }
+
+/**
+ * Changes an absolute URL into a Relative
+ * @param {*} url
+ * @returns
+ */
+export function absoluteUrlToRelative(url) {
+  const regex = /(.*\.com)/gm;
+
+  // Alternative syntax using RegExp constructor
+  // const regex = new RegExp('(.*\\.com)', 'gm')
+
+  const str = url;
+  const subst = ``;
+
+  // The substituted value will be contained in the result variable
+  return str.replace(regex, subst);
+}

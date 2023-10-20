@@ -42,7 +42,8 @@ if (initialQuery !== "") {
 const myInstantSearch = instantsearch({
   indexName: searchConfig.recordsIndex,
   searchClient,
-  initialUiState
+  initialUiState,
+  routing: true,
 });
 
 /**
