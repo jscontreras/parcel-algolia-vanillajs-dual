@@ -158,6 +158,9 @@ const autocompleteInstance = autocomplete({
   panelPlacement: 'full-width',
   onStateChange(state) {
     autocompleteState = state;
+    if (state.state.isOpen) {
+      enableMouseTouch();
+    }
   },
   onSubmit() {
     autocompleteSubmitHandler(autocompleteState.state);
@@ -229,7 +232,7 @@ const autocompleteInstance = autocomplete({
                 indexName: searchConfig.recordsIndex,
                 query,
                 params: {
-                  hitsPerPage: 4,
+                  hitsPerPage: 10,
                   attributesToSnippet: ['name:10', 'description:35'],
                   snippetEllipsisText: '…',
                   clickAnalytics: true,
@@ -320,3 +323,50 @@ const autocompleteInstance = autocomplete({
     ];
   },
 });
+
+/**
+ * Enables mouse drag and drop for scrolling.
+ */
+function enableMouseTouch() {
+  if (navigator.maxTouchPoints !== 0) {
+    return;
+  }
+  // srcoll touch desktop emulation (on click and drag)
+  const slider = document.querySelector('#autocomplete-0-products-list');
+  if (slider && !slider.classList.contains('touch-enabled')) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    const mouseDownHandler = (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    }
+    const mouseLeaveHanlder = () => {
+      isDown = false;
+      slider.classList.remove('active');
+    }
+
+    const mouseUpHandler = () => {
+      isDown = false;
+      slider.classList.remove('active');
+    };
+
+    const mouseMoveHandler = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 3; //scroll-fast
+      slider.scrollLeft = scrollLeft - walk;
+    }
+
+    slider.classList.add('touch-enabled');
+    slider.addEventListener('mousedown', mouseDownHandler);
+    slider.addEventListener('mouseleave', mouseLeaveHanlder);
+    slider.addEventListener('mouseup', mouseUpHandler);
+    slider.addEventListener('mousemove', mouseMoveHandler);
+  }
+
+}

@@ -566,12 +566,13 @@ li.ais-Pagination-item--page {
 
   .aa-Source[data-autocomplete-source-id='products'],
   .aa-Source[data-autocomplete-source-id='nonResults'] {
-    overflow-x: scroll;
+    overflow-x: hidden;
 
     .aa-List {
       display: flex;
       flex-wrap: nowrap;
       overflow-x: scroll;
+      -webkit-overflow-scrolling: touch;
     }
 
     .aa-Item {
